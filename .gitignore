@@ -1,5 +1,9 @@
 node_modules
 .env
+.venv
+.DS_STORE
+.vscode
+__pycache__
 coverage
 coverage.json
 typechain

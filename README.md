@@ -1,5 +1,6 @@
 # PinRIT PoC
 
+# BLOCKCHAIN TESTING
 1. Potreban account na <a href="https://www.alchemy.com/">https://www.alchemy.com/</a> (može preko Google Sign In).
 2. Unutar Alchemyja: Apps > Create app > Chain = Polygon > Network = Polygon Mumbai (+dodati nekakvo ime)
 3. Nakon što je app kreiran potrebno ga je otvoriti i kliknuti button "VIEW KEY". Kopirate HTTPS key i zaljepiti ga u .env, u polje TESTNET_RPC.
@@ -12,3 +13,19 @@
 9. `npx hardhat compile`
 10. `npx hardhat run scripts/deploy.js --network mumbai`
 11. `npx hardhat verify --network mumbai <0x... od prijašnje komande>`
+
+
+# INTERACTIVE CANVAS 
+Starter app za pinRIT projekt.
+1. Potreban python3.7+
+2. Aktivirati virtualku > `pip install virtualenv` *ako vec nema globalno
+    1. `python -m venv .venv`
+
+    a. UNIX:
+    2. `source .venv/bin/activate`
+    b. WINDOWS:
+    2. `.venv/Scripts/activate`
+
+    3. `pip install -r REQUIRMEMENTS.txt`
+
+3. Pokrenuti app koristeci > `python app.py`

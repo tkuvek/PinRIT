@@ -1,0 +1,22 @@
+/* .map {
+    width: 100%;
+    height: 90vh;
+} */
+
+.svg-layer .pixel:hover {
+opacity: 0.4;
+}
+
+body{
+    margin: 0;
+}
+
+.mapDiv {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.connectBtnDiv {
+    margin-top: 15px!important;
+    margin-left: 10px!important;
+}
