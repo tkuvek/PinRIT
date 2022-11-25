@@ -20,8 +20,8 @@ Starter app za pinRIT projekt.
 1. Potreban python3.7+
 2. Aktivirati virtualku > `pip install virtualenv` *ako vec nema globalno
     1. `python -m venv .venv`
-    2a. UNIX: `source .venv/bin/activate`
-    2b. WINDOWS: `.venv/Scripts/activate`
+    2. UNIX: `source .venv/bin/activate`
+    2. Windows: `.venv/Scripts/activate`
     3. `pip install -r REQUIRMEMENTS.txt`
 
 3. Pokrenuti app koristeci > `python app.py`
