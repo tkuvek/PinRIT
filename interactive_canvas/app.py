@@ -1,5 +1,5 @@
 from flask import Flask, render_template, make_response, request
-from generate import generate_svg
+from utils.generate import generate_svg
 
 app = Flask(__name__)
 
