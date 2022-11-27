@@ -22,6 +22,6 @@ Starter app za pinRIT projekt.
     1. `python -m venv .venv`
     2. UNIX: `source .venv/bin/activate`
     2. Windows: `.venv/Scripts/activate`
-    3. `pip install -r REQUIRMEMENTS.txt`
+    3. `pip install -r REQUIREMENTS.txt`
 
 3. Pokrenuti app koristeci > `python app.py`
