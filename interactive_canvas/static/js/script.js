@@ -1,15 +1,44 @@
 // CONNECT METAMASK BUTTON
+let METAMASK_ID = ''
 $('#btn-metamask').on('click', function(e) {
     window.ethereum ? signIn() : alert("Install MetaMask browser extension!");
 })
 const signIn = async () => {
     accounts = await window.ethereum.request({method: "eth_requestAccounts"}).catch(error => alert(JSON.stringify(error.message)));
     $("#mm-address").html(accounts[0]);
+    METAMASK_ID = accounts[0]
 }
 
 
+//COLOR PICKER
+let color = $("#picker")[0].value;
+$("#picker").on('change', function(e){
+    color = $(this)[0].value;
+});
+
+
+// SELECTED PIXEL
+let selectedPixel = ''
+
+
 // BUY PIXEL BUTTON
-// TODO:
+function buyPixel() {
+    if (selectedPixel != '') {
+        $.ajax({
+            url: '/buy-pixel',
+            type: 'POST',
+            data: {
+                metamask_id: METAMASK_ID,
+                pixel: selectedPixel,
+                color: color
+            },
+            success: function (response) {
+            },
+            error: function (response) {
+            }
+        });
+    }
+}
 
 
 // CREATE D3 SVG
@@ -41,15 +70,20 @@ for(let i=0; i<size*size; i++){
     .attr("y", y)
     .attr("width", 1)
     .attr("height", 1)
-    .attr("fill", "#"+randomColor)
+   // .attr("fill", "#"+randomColor)
+   .attr("fill", "#000000")
 
     
     // TRIGGER ON CLICK pixel actions
     .on("click", function(e) {
-        let color =  "#000000";
-        let p = d3.select(this)
-        .attr("fill" , color);
+        // change color
+        let p = d3.select(this).attr("fill" , color);
+        selectedPixel = p.attr('id')
+
         console.log("selected pixel id: "+p.attr('id')+" , color to change:"+color)
+
+        // todo: add to buy button
+        buyPixel()
     });
 
 }

@@ -1,6 +1,4 @@
-import sys
-from flask import Flask, render_template, Markup, Response, make_response
-from flask_ngrok import run_with_ngrok
+from flask import Flask, render_template, make_response, request
 from generate import generate_svg
 
 app = Flask(__name__)
@@ -13,6 +11,22 @@ def index(size=None):
     if size != None:
         svg = generate_svg(int(size))
     return render_template('index.html')
+
+
+@app.route('/buy-pixel', methods=['GET', 'POST'])
+def buy_pixel():
+    m_id = request.form.get('metamask_id')
+    # todo: metamask id check
+
+    p_id = request.form.get('pixel')
+    p_color = request.form.get('color')
+
+    #trigger smart contract with id, pixel_id, color
+    print('METAMASK ID: {}, PIXEL ID: {}, PIXEL COLOR: {}'.format(m_id, p_id, p_color))
+    #if transaction.ok
+    #return success
+    return 'aa'
+
 
 # pixel svg for js
 # not used if going with d3.js version
