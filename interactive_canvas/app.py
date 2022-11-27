@@ -1,7 +1,9 @@
 from flask import Flask, render_template, make_response, request
 from utils.generate import generate_svg
-
+from utils.connect_web3 import connect_contract, get_data
 app = Flask(__name__)
+
+contract = connect_contract()
 
 # main page
 @app.route('/')
@@ -36,6 +38,13 @@ def pixel():
     response = make_response(svg)
     response.content_type = 'image/svg+xml'
     return response
+
+
+@app.route('/get-mint-data', methods=['GET', 'POST'])
+def get_mint_data():
+    if contract:
+        data = get_data(contract)
+        return data
 
 
 if __name__ == "__main__":
