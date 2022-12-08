@@ -73,7 +73,7 @@ contract PinRIT is ERC721URIStorage {
             );
     }
 
-    function changeColor(uint256 tokenId, string memory newColor) public {
+    function changeColor(uint256 tokenId, string memory newColor) public payable {
         require(_exists(tokenId), "Please use an existing token");
         require(
             ownerOf(tokenId) == msg.sender,

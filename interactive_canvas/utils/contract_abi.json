@@ -132,7 +132,7 @@
         ],
         "name": "changeColor",
         "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
       },
       {

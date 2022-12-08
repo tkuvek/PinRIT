@@ -132,7 +132,7 @@ let abi = {
             ],
             "name": "changeColor",
             "outputs": [],
-            "stateMutability": "nonpayable",
+            "stateMutability": "payable",
             "type": "function"
         },
         {
@@ -423,6 +423,9 @@ let abi = {
 
 let provider;
 let contract;
+let signer;
+let accountAddress;
+
 let DATA = {};
 (async () => {
     let res = await $.ajax('/get-mint-data').done(function (data) {
@@ -438,8 +441,7 @@ let DATA = {};
         const signIn = async () => {
             let accounts = await window.ethereum.request({ method: "eth_requestAccounts" }).catch(error => alert(JSON.stringify(error.message)));
 
-            // The address from the above deployment example
-            let contractAddress = "0xeea8c2bb6518ac09A63f54E5e492F96039e60883";
+            let contractAddress = "0x621eB9d5A29306ea50dE3dE7bbbac53F2B4e489a";
 
             provider = new ethers.providers.Web3Provider(window.ethereum);
 
@@ -454,14 +456,14 @@ let DATA = {};
                             var myBalance = (balance / ethers.constants.WeiPerEther).toFixed(4);
                             console.log("Your Balance: " + myBalance);
                         });
-
-                        // get a signer object so we can do things that need signing
-                        signer = provider.getSigner();
-                        contract = new ethers.Contract(contractAddress, abi.abi, provider);
-                        contract.connect(signer)
                     })
                 }
             })
+            // get a signer object so we can do things that need signing
+            signer = provider.getSigner();
+            // initi contract,
+            contract = new ethers.Contract(contractAddress, abi.abi, signer);
+            contract.connect(signer)
             $("#mm-address").html(accounts[0]);
             METAMASK_ID = accounts[0]
         }
@@ -479,8 +481,26 @@ let DATA = {};
 
 
         // BUY PIXEL BUTTON
-        function buyPixel() {
+        async function buyPixel() {
             if (selectedPixel != '') {
+                let tx = await contract.changeColor(
+                    parseInt(selectedPixel.replace("pixel-", "")) + 1, color, // incremented selected pixel because first token is #1, not #0
+                    {
+                        value: ethers.utils.parseEther("0"), // price of the transaction
+                        from: accountAddress, // address which will be charged for the transaction
+                        gasPrice: ethers.utils.parseEther("0.0000001"), // price of gas fee
+                        gasLimit: 900000 // over 9 (hundred) thousand(s)
+                    });
+
+                await tx.wait().then((receipt) => {
+                    if (receipt.status === 1) {
+                        alert(`Transaction successful: ${receipt.transactionHash}`)
+                        console.log(receipt)
+                    }
+                }).catch((error) => {
+                    alert(`Transaction unsuccessful: ${receipt.transactionHash}. Error: ${error}`)
+                })
+
                 $.ajax({
                     url: '/buy-pixel',
                     type: 'POST',
@@ -490,8 +510,7 @@ let DATA = {};
                         color: color
                     },
                     success: async function (response) {
-                        // let tx = await contract.changeColor(parseInt(selectedPixel.replace("pixel-", "")), color, { value: ethers.utils.parseEther("0.00000000000000001") });
-                        // const transaction = await signer.sendTransaction(tx);
+
                     },
                     error: function (response) {
                     }
