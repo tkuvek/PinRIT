@@ -495,10 +495,9 @@ let DATA = {};
                 await tx.wait().then((receipt) => {
                     if (receipt.status === 1) {
                         alert(`Transaction successful: ${receipt.transactionHash}`)
-                        console.log(receipt)
                     }
                 }).catch((error) => {
-                    alert(`Transaction unsuccessful: ${receipt.transactionHash}. Error: ${error}`)
+                    alert(`Transaction unsuccessful. Error: ${error}`)
                 })
 
                 $.ajax({
