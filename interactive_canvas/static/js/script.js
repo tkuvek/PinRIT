@@ -522,7 +522,7 @@ let DATA = {};
         let map = document.getElementById('#map');
         let size = 100;
         let start_zoom = 15;
-        let zoom = d3.zoom().scaleExtent([start_zoom, 100])
+        let zoom = d3.zoom().scaleExtent([start_zoom, 100]).translateExtent([[0, 0], [size, size]]);
 
         let svg = d3.select('svg')
             .attr('viewbox', "0 0 " + size + " " + size)
