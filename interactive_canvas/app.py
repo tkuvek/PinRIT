@@ -9,10 +9,18 @@ contract = connect_contract()
 @app.route('/')
 @app.route('/index')
 @app.route('/index/<size>')
+
 def index(size=None):
     if size != None:
         svg = generate_svg(int(size))
     return render_template('index.html')
+
+
+@app.route('/buy',  methods=["GET", "POST"])
+def buy():
+    # if request.method == "POST":
+        return render_template('buy.html')
+
 
 
 @app.route('/buy-pixel', methods=['GET', 'POST'])
