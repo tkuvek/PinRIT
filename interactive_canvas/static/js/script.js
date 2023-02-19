@@ -58,40 +58,41 @@ let DATA = {};
 
 
         // SELECTED PIXEL
-        let selectedPixel = ''
-
+        // let selectedPixel = ''
+        let selectedPixel = [];
 
         // BUY PIXEL BUTTON
-        async function buyPixel() {
-            if (selectedPixel != '') {
-                tokenId = parseInt(selectedPixel.replace("pixel-", "")) + 1 // incremented selected pixel because first token is #1, not #0
+        // iako se moze slati vise pixela, mogu se slati samo s jednim tipom boje (znaci color uvik ima 1 element)
+        async function buyPixel(pixels, color) {
+            if (pixels.length > 0) {
                 let tx = await contract.changeColor(
-                    tokenId, color, 
+                    pixels.map(p => parseInt(p.replace("pixel-", "")) + 1),
+                    color, // pass the colors array to the smart contract
                     {
-                        value: ethers.utils.parseEther("0"),
+                        value: ethers.utils.parseEther("0"), // price of the transaction
                         from: accountAddress, // address which will be charged for the transaction
-                        gasPrice: ethers.utils.parseEther("0.0000001"), 
-                        gasLimit: 225000
-                    });
-
+                        gasPrice: ethers.utils.parseEther("0.0000001"), // price of gas fee
+                        gasLimit: 900000 // over 9 (hundred) thousand(s)
+                    });                
                 await tx.wait().then((receipt) => {
                     if (receipt.status === 1) {
                         alert(`Transaction successful: ${receipt.transactionHash}`)
                     }
                 }).catch((error) => {
                     alert(`Transaction unsuccessful. Error: ${error}`)
-                })
-
+                    console.log(error)
+                });
+        
                 $.ajax({
                     url: '/buy-pixel',
                     type: 'POST',
                     data: {
                         metamask_id: METAMASK_ID,
-                        pixel: selectedPixel,
+                        pixels: pixels,
                         color: color
                     },
                     success: async function (response) {
-
+        
                     },
                     error: function (response) {
                     }
@@ -99,12 +100,61 @@ let DATA = {};
             }
         }
 
+        
+        // BUY PIXEL BUTTON - ORIGINAL
+        // async function buyPixel() {
+        //     if (selectedPixel != '') {
+        //         tokenId = parseInt(selectedPixel.replace("pixel-", "")) + 1 // incremented selected pixel because first token is #1, not #0
+        //         let tx = await contract.changeColor(
+        //             tokenId, color, 
+        //             {
+        //                 value: ethers.utils.parseEther("0"),
+        //                 from: accountAddress, // address which will be charged for the transaction
+        //                 gasPrice: ethers.utils.parseEther("0.0000001"), 
+        //                 gasLimit: 225000
+        //             });
+
+        //         await tx.wait().then((receipt) => {
+        //             if (receipt.status === 1) {
+        //                 alert(`Transaction successful: ${receipt.transactionHash}`)
+        //             }
+        //         }).catch((error) => {
+        //             alert(`Transaction unsuccessful. Error: ${error}`)
+        //         })
+
+        //         $.ajax({
+        //             url: '/buy-pixel',
+        //             type: 'POST',
+        //             data: {
+        //                 metamask_id: METAMASK_ID,
+        //                 pixel: selectedPixel,
+        //                 color: color
+        //             },
+        //             success: async function (response) {
+
+        //             },
+        //             error: function (response) {
+        //             }
+        //         });
+        //     }
+        // }
+
 
         // CREATE D3 SVG
         let map = document.getElementById('#map');
         let size = 100;
         let start_zoom = 15;
         let zoom = d3.zoom().scaleExtent([start_zoom, 100]).translateExtent([[0, 0], [size, size]]);
+
+        // PURCHASE button created dynamically
+        var button = document.createElement("button");
+        button.id = "purchase-btn";
+        button.type = "button";
+        button.classList.add("btn", "btn-info");
+        button.innerText = "Purchase pixel(s)";
+        document.getElementById("purchaseBtn").appendChild(button);
+        // useful later
+        // document.getElementById("purchase-btn").disabled = true;
 
         let svg = d3.select('svg')
             .attr('viewbox', "0 0 " + size + " " + size)
@@ -134,18 +184,46 @@ let DATA = {};
 
 
                 // TRIGGER ON CLICK pixel actions
+                // .on("click", function (e) {
+                //     // change color
+                //     let p = d3.select(this).attr("fill", color);
+                //     selectedPixel = p.attr('id')
+
+                //     console.log("selected pixel id: " + p.attr('id') + " , color to change:" + color)
+
+                //     // todo: add to buy button
+                //     buyPixel()
+                // });
+
+                // ZA KUPOVINU PIXELA, on purchase button click
                 .on("click", function (e) {
                     // change color
                     let p = d3.select(this).attr("fill", color);
-                    selectedPixel = p.attr('id')
-
-                    console.log("selected pixel id: " + p.attr('id') + " , color to change:" + color)
-
-                    // todo: add to buy button
-                    buyPixel()
+                    let pixelId = p.attr('id');
+                
+                    let index = selectedPixel.indexOf(pixelId);
+                    if (index === -1) {
+                        selectedPixel.push(pixelId);
+                    } else {
+                        selectedPixel.splice(index, 1);
+                        // to maintain its original position in the array
+                        selectedPixel.splice(index, 0, pixelId);
+                    }
+                
+                    console.log("selected pixel id: " + selectedPixel + "\ncolor to change:" + color)
                 });
 
         }
+
+        document.getElementById("purchase-btn").addEventListener("click", function (e) {
+            if (selectedPixel.length > 0) {
+                console.log("Pixel(s) to be bought: " + selectedPixel)
+                buyPixel(selectedPixel, color)
+            }
+            else {
+                alert("Please choose either one or more pixels to purchase.")
+            }
+        });
 
 
     });
