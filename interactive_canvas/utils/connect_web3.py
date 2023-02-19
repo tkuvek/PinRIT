@@ -13,7 +13,7 @@ def connect_contract():
         CONTRACT_ABI = json.load(f).get('abi')
         # prev contract: 0x621eB9d5A29306ea50dE3dE7bbbac53F2B4e489a
         # connect to contract
-        contract = w3.eth.contract(address='0x621eB9d5A29306ea50dE3dE7bbbac53F2B4e489a', abi=CONTRACT_ABI)
+        contract = w3.eth.contract(address='0x2E81d5bB5aC7EeB5bE89119d9eDB3C8950fEEeAf', abi=CONTRACT_ABI)
         return contract
     else:
         return False
@@ -29,24 +29,24 @@ def get_data(contract):
 
             #get token color
             token_color = contract.functions.tokenIdToColor(i).call()
-            print(token_color)
+            # print(token_color)
             minted_pixels[i] = token_color
-            print(minted_pixels)
+            # print(minted_pixels)
 
             # converting token_uri
             token_uri = token_uri.replace('data:application/json;base64,', '')
             token_uri = token_uri.encode()
 
-            img_json = json.loads(base64.b64decode(token_uri))
-            img = img_json.get('image')
-            img = img.replace('data:image/svg+xml;base64,', '')
-            img = base64.b64decode(img).decode()
-            print(img)
+            # img_json = json.loads(base64.b64decode(token_uri))
+            # img = img_json.get('image')
+            # img = img.replace('data:image/svg+xml;base64,', '')
+            # img = base64.b64decode(img).decode()
+            # print(img)
 
             # save as svg --testing only
-            new_img = open(getcwd()+'/utils/temp.svg', 'w+')
-            new_img.write(img)
-            new_img.close()
+            # new_img = open(getcwd()+'/utils/temp.svg', 'w+')
+            # new_img.write(img)
+            # new_img.close()
 
     except Exception:
         return minted_pixels
