@@ -73,26 +73,6 @@ contract PinRIT is ERC721URIStorage {
             );
     }
 
-    function changeMultipleColors(uint256[] memory tokenIds, string[] memory newColors) public payable {
-        require(tokenIds.length == newColors.length, "Invalid input arrays");
-
-        for (uint256 i = 0; i < tokenIds.length; i++) {
-            uint256 tokenId = tokenIds[i];
-            _transfer(ownerOf(tokenId), msg.sender, tokenId);
-
-            string memory newColor = newColors[i];
-
-            require(_exists(tokenId), "Please use an existing token");
-            require(
-                ownerOf(tokenId) == msg.sender,
-                "You must own the pixel before changing it's color"
-            );
-
-            tokenIdToColor[tokenId] = newColor;
-            _setTokenURI(tokenId, getTokenURI(tokenId));
-        }
-    }
-
     function changeColor(uint256 tokenId, string memory newColor) public payable {
         _transfer(ownerOf(tokenId), msg.sender, tokenId);
 
@@ -101,8 +81,10 @@ contract PinRIT is ERC721URIStorage {
             ownerOf(tokenId) == msg.sender,
             "You must own the pixel before changing it's color"
         );
+        string memory currentColor = tokenIdToColor[tokenId];
+        currentColor = newColor;
+        tokenIdToColor[tokenId] = currentColor;
 
-        tokenIdToColor[tokenId] = newColor;
         _setTokenURI(tokenId, getTokenURI(tokenId));
     }
 }
