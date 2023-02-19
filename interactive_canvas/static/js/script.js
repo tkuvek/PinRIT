@@ -42,7 +42,7 @@ let DATA = {};
             })
             // get a signer object so we can do things that need signing
             signer = provider.getSigner();
-            // initi contract,
+            // init contract,
             contract = new ethers.Contract(contractAddress, abi.abi, signer);
             contract.connect(signer)
             $("#mm-address").html(accounts[0]);
@@ -68,10 +68,10 @@ let DATA = {};
                 let tx = await contract.changeColor(
                     tokenId, color, 
                     {
-                        value: ethers.utils.parseEther("0"), // price of the transaction
+                        value: ethers.utils.parseEther("0"),
                         from: accountAddress, // address which will be charged for the transaction
-                        gasPrice: ethers.utils.parseEther("0.0000001"), // price of gas fee
-                        gasLimit: 900000 // over 9 (hundred) thousand(s)
+                        gasPrice: ethers.utils.parseEther("0.0000001"), 
+                        gasLimit: 225000
                     });
 
                 await tx.wait().then((receipt) => {
