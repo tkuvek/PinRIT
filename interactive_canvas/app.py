@@ -22,38 +22,19 @@ def buy():
         return render_template('buy.html')
 
 
-# ORIGINALNI
-# @app.route('/buy-pixel', methods=['GET', 'POST'])
-# def buy_pixel():
-#     m_id = request.form.get('metamask_id')
-#     # todo: metamask id check
 
-#     p_id = request.form.get('pixel')
-#     p_color = request.form.get('color')
-
-#     #trigger smart contract with id, pixel_id, color
-#     print('METAMASK ID: {}, PIXEL ID: {}, PIXEL COLOR: {}'.format(m_id, p_id, p_color))
-#     #if transaction.ok
-#     #return success
-#     return 'aa'
-
-# TODO: kao dohvaca vise pixela (array) i color-a (array) iako se color uvik salje isti
 @app.route('/buy-pixel', methods=['GET', 'POST'])
 def buy_pixel():
     m_id = request.form.get('metamask_id')
     # todo: metamask id check
 
-    pixels = request.form.getlist('pixels')
-    color = request.form.getlist('color')
+    p_id = request.form.get('pixel')
+    p_color = request.form.get('color')
 
-    #trigger smart contract with id, pixels, colors
-    for i in range(len(pixels)):
-        p_id = pixels[i]
-        p_color = color[i]
-        print('METAMASK ID: {}, PIXEL ID: {}, PIXEL COLOR: {}'.format(m_id, p_id, p_color))
-        #if transaction.ok
-        #return success
-
+    #trigger smart contract with id, pixel_id, color
+    print('METAMASK ID: {}, PIXEL ID: {}, PIXEL COLOR: {}'.format(m_id, p_id, p_color))
+    #if transaction.ok
+    #return success
     return 'aa'
 
 
