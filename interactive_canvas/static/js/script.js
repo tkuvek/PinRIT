@@ -8,6 +8,8 @@ let contract;
 let signer;
 let accountAddress;
 
+
+
 let DATA = {};
 (async () => {
     let res = await $.ajax('/get-mint-data').done(function (data) {
@@ -15,18 +17,16 @@ let DATA = {};
         console.log(DATA)
 
         // CONNECT METAMASK BUTTON
-        let METAMASK_ID = ''
-        $('#btn-metamask').on('click', function (e) {
-            window.ethereum ? signIn() : alert("Install MetaMask browser extension!");
+        let METAMASK_ID = localStorage.getItem('metamask') ?? '';
 
-        })
-        const signIn = async () => {
-            let accounts = await window.ethereum.request({ method: "eth_requestAccounts" }).catch(error => alert(JSON.stringify(error.message)));
-
+        //CONNECT CONTRACT
+        if(window.ethereum && METAMASK_ID.length > 0) {
+            connectContract()
+        }
+        function connectContract() {
             let contractAddress = "0x54f2dd7c40c5012163F4423f7A84f13e1a14F30a";
 
             provider = new ethers.providers.Web3Provider(window.ethereum);
-
             provider.getNetwork().then(function (result) {
                 console.log(result)
                 if (result['chainId'] === 80001) {
@@ -46,8 +46,29 @@ let DATA = {};
             // init contract,
             contract = new ethers.Contract(contractAddress, abi.abi, signer);
             contract.connect(signer)
+        }
+
+
+        $('#btn-metamask').on('click', function (e) {
+            //window.ethereum ? signIn() : alert("Install MetaMask browser extension!");
+
+            if(window.ethereum) {
+                signIn();
+            }else{
+                $("#btn-metamask").removeClass('disabled');
+                $('#metamask-note').html("Install MetaMask browser extension!");
+            }
+        })
+        const signIn = async () => {
+            let accounts = await window.ethereum.request({ method: "eth_requestAccounts" }).catch(error => alert(JSON.stringify(error.message)));
+            connectContract()
+
             $("#mm-address").html(accounts[0]);
             METAMASK_ID = accounts[0]
+            $('#metamask-id').html(`${METAMASK_ID}`);
+            localStorage.setItem('metamask', `${METAMASK_ID}`);
+            $("#buy-btn").removeClass('disabled');
+            $("#btn-metamask").addClass('disabled');
         }
 
 
@@ -61,29 +82,41 @@ let DATA = {};
         // SELECTED PIXEL
         // let selectedPixel = ''
         let selectedPixel = [];
+        let selectedColors = [];
+
 
         // BUY PIXEL BUTTON
-        // iako se moze slati vise pixela, mogu se slati samo s jednim tipom boje (znaci color uvik ima 1 element)
-        async function buyPixel(pixels, color) {
+        async function buyPixel(pixels, colors) {
             if (pixels.length > 0) {
-                let tx = await contract.changeColor(
-                    pixels.map(p => parseInt(p.replace("pixel-", "")) + 1),
-                    color, // pass the colors array to the smart contract
+                console.log(pixels);
+                console.log(colors);
+
+                let tx = await contract.changeMultipleColors(
+                    pixels,
+                    colors, // pass the colors array to the smart contract
                     {
                         value: ethers.utils.parseEther("0"), // price of the transaction
                         from: accountAddress, // address which will be charged for the transaction
                         gasPrice: ethers.utils.parseEther("0.0000001"), // price of gas fee
-                        gasLimit: 900000 // over 9 (hundred) thousand(s)
-                    });                
+                        gasLimit: 200000*pixels.length // over 9 (hundred) thousand(s)
+                    }); 
                 await tx.wait().then((receipt) => {
                     if (receipt.status === 1) {
-                        alert(`Transaction successful: ${receipt.transactionHash}`)
+                        $('#pixelPurchaseLabel').html("Success");
+                        $('#pixel-info').hide();
+                        $('#buy-btn').hide();
+                        $('#pixel-success').show();
+                        //alert(`Transaction successful: ${receipt.transactionHash}`)
                     }
                 }).catch((error) => {
-                    alert(`Transaction unsuccessful. Error: ${error}`)
-                    console.log(error)
-                });
-        
+                    
+                    $('#pixelPurchaseLabel').html("Fail")
+                    $('#pixel-info').hide();
+                    $('#buy-btn').hide();
+                    $('#pixel-fail').show();
+                   alert(`Transaction unsuccessful. Error: ${error}`)
+                })
+
                 $.ajax({
                     url: '/buy-pixel',
                     type: 'POST',
@@ -101,45 +134,6 @@ let DATA = {};
             }
         }
 
-        
-        // BUY PIXEL BUTTON - ORIGINAL
-        // async function buyPixel() {
-        //     if (selectedPixel != '') {
-        //         tokenId = parseInt(selectedPixel.replace("pixel-", "")) + 1 // incremented selected pixel because first token is #1, not #0
-        //         let tx = await contract.changeColor(
-        //             tokenId, color, 
-        //             {
-        //                 value: ethers.utils.parseEther("0"),
-        //                 from: accountAddress, // address which will be charged for the transaction
-        //                 gasPrice: ethers.utils.parseEther("0.0000001"), 
-        //                 gasLimit: 225000
-        //             });
-
-        //         await tx.wait().then((receipt) => {
-        //             if (receipt.status === 1) {
-        //                 alert(`Transaction successful: ${receipt.transactionHash}`)
-        //             }
-        //         }).catch((error) => {
-        //             alert(`Transaction unsuccessful. Error: ${error}`)
-        //         })
-
-        //         $.ajax({
-        //             url: '/buy-pixel',
-        //             type: 'POST',
-        //             data: {
-        //                 metamask_id: METAMASK_ID,
-        //                 pixel: selectedPixel,
-        //                 color: color
-        //             },
-        //             success: async function (response) {
-
-        //             },
-        //             error: function (response) {
-        //             }
-        //         });
-        //     }
-        // }
-
 
         // CREATE D3 SVG
         let map = document.getElementById('#map');
@@ -147,15 +141,15 @@ let DATA = {};
         let start_zoom = 15;
         let zoom = d3.zoom().scaleExtent([start_zoom, 100]).translateExtent([[0, 0], [size, size]]);
 
-        // PURCHASE button created dynamically
-        var button = document.createElement("button");
-        button.id = "purchase-btn";
-        button.type = "button";
-        button.classList.add("btn", "btn-info");
-        button.innerText = "Purchase pixel(s)";
-        document.getElementById("purchaseBtn").appendChild(button);
-        // useful later
-        // document.getElementById("purchase-btn").disabled = true;
+        // // PURCHASE button created dynamically
+        // var button = document.createElement("button");
+        // button.id = "purchase-btn";
+        // button.type = "button";
+        // button.classList.add("btn", "btn-info");
+        // button.innerText = "Purchase pixel(s)";
+        // document.getElementById("purchaseBtn").appendChild(button);
+        // // useful later
+        // // document.getElementById("purchase-btn").disabled = true;
 
         let svg = d3.select('svg')
             .attr('viewbox', "0 0 " + size + " " + size)
@@ -200,34 +194,59 @@ let DATA = {};
                 .on("click", function (e) {
                     // change color
                     let p = d3.select(this).attr("fill", color);
-                    let pixelId = p.attr('id');
-                
-                    let index = selectedPixel.indexOf(pixelId);
-                    if (index === -1) {
-                        selectedPixel.push(pixelId);
-                    } else {
-                        selectedPixel.splice(index, 1);
-                        // to maintain its original position in the array
-                        selectedPixel.splice(index, 0, pixelId);
-                    }
-                
-                    console.log("selected pixel id: " + selectedPixel + "\ncolor to change:" + color)
-                });
 
+                    selectedPixel.push(parseInt(p.attr('id').replace("pixel-", "")) + 1);
+                    selectedColors.push(color);
+
+                    console.log("selected pixel id: " + p.attr('id') + " , color to change:" + color)
+
+                });
         }
 
-        document.getElementById("purchase-btn").addEventListener("click", function (e) {
+
+        $modalPixels =  $("#modalPixels");
+        document.getElementById("buyPixels").addEventListener("click", function (e) {
+            e.preventDefault();
+
             if (selectedPixel.length > 0) {
-                console.log("Pixel(s) to be bought: " + selectedPixel)
-                buyPixel(selectedPixel, color)
-            }
-            else {
+                $('#pixelPurchaseLabel').html("Pixel Purchase")
+                count=0;
+                // $modalPixels.remove();
+
+                selectedColors.forEach(c => {
+                    $modalPixels.append(`<p class='col-5'>Pixel color - ${c}`);
+                    $modalPixels.append(`<p class='col-2'>x1`);
+                    $modalPixels.append(`<p class='col-3'>0.02MATIC`);
+                    count+=0.02
+                });
+                $('#metamask-note').html("");
+                $('#pixel-success').hide();
+                $('#pixel-fail').hide();
+                $('#pixel-info').show();
+                $('#buy-btn').show();
+                $("#totalBuy").html('Total estimate: '+count+'MATIC')
+
+                if(METAMASK_ID !=  '') {
+                    $("#buy-btn").removeClass('disabled');
+                    $('#metamask-id').html(`${METAMASK_ID}`);
+                    $("#btn-metamask").addClass('disabled');
+                }else{
+                    $("#buy-btn").addClass('disabled');
+                    $('#metamask-id').html(`Connect MetaMask`);
+                    $("#btn-metamask").removeClass('disabled');
+                }
+                $("#pixelPurchase").modal('show');
+
+
+            $('#buy-btn').on('click', function (e) {
+                buyPixel(selectedPixel, selectedColors);
+            })
+
+        }else {
                 alert("Please choose either one or more pixels to purchase.")
-            }
+        }
         });
 
 
     });
 })();
-// getData()
-

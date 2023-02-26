@@ -28,3 +28,47 @@ body{
 .width{
     width: 100vw;
 }
+
+.modal-content{
+    background-color: #27244C;
+    color: white;
+}
+
+#btn-metamask{
+    width: 80%;
+    border-radius: 20px;
+    font-weight: bold;
+    height: 5%;
+}
+
+#metamask-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.btn-buy{
+    width: 30%;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+#success, #fail {
+    width: 25%;
+    height: 25%;
+}
+
+.modal-header{
+    border: none;
+}
+
+.btn-close-white{
+    color: white;
+}
+
+#metamask-id{
+    margin-bottom: 0px !important;
+}
+
+.navbar{
+    border-bottom: 1.5px solid #5DC7EC;
+}
