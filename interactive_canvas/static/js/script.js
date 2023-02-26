@@ -16,8 +16,14 @@ let DATA = {};
         // CONNECT METAMASK BUTTON
         let METAMASK_ID = ''
         $('#btn-metamask').on('click', function (e) {
-            window.ethereum ? signIn() : alert("Install MetaMask browser extension!");
+            //window.ethereum ? signIn() : alert("Install MetaMask browser extension!");
 
+            if(window.ethereum) {
+                signIn();
+            }else{
+                $("#btn-metamask").removeClass('disabled');
+                $('#metamask-note').html("Install MetaMask browser extension!");
+            }
         })
         const signIn = async () => {
             let accounts = await window.ethereum.request({ method: "eth_requestAccounts" }).catch(error => alert(JSON.stringify(error.message)));
@@ -47,6 +53,9 @@ let DATA = {};
             contract.connect(signer)
             $("#mm-address").html(accounts[0]);
             METAMASK_ID = accounts[0]
+            $('#metamask-id').html(`${METAMASK_ID}`);
+            $("#buy-btn").removeClass('disabled');
+            $("#btn-metamask").addClass('disabled');
         }
 
 
@@ -76,10 +85,18 @@ let DATA = {};
 
                 await tx.wait().then((receipt) => {
                     if (receipt.status === 1) {
-                        alert(`Transaction successful: ${receipt.transactionHash}`)
+                        $('#pixelPurchaseLabel').html("Success");
+                        $('#pixel-info').hide();
+                        $('#buy-btn').hide();
+                        $('#pixel-success').show();
+                        //alert(`Transaction successful: ${receipt.transactionHash}`)
                     }
                 }).catch((error) => {
-                    alert(`Transaction unsuccessful. Error: ${error}`)
+                    $('#pixelPurchaseLabel').html("Fail")
+                    $('#pixel-info').hide();
+                    $('#buy-btn').hide();
+                    $('#pixel-fail').show();
+                   // alert(`Transaction unsuccessful. Error: ${error}`)
                 })
 
                 $.ajax({
@@ -141,8 +158,29 @@ let DATA = {};
 
                     console.log("selected pixel id: " + p.attr('id') + " , color to change:" + color)
 
-                    // todo: add to buy button
-                    buyPixel()
+                    $('#pixelPurchaseLabel').html("Pixel Purchase")
+                    $('#pixelName').html(`Pixel color - ${color}`);
+                    $('#metamask-note').html("");
+                    $('#pixel-success').hide();
+                    $('#pixel-fail').hide();
+                    $('#pixel-info').show();
+                    $('#buy-btn').show();
+
+                    if(METAMASK_ID !=  '') {
+                        $("#buy-btn").removeClass('disabled');
+                        $('#metamask-id').html(`${METAMASK_ID}`);
+                        $("#btn-metamask").addClass('disabled');
+                    }else{
+                        $("#buy-btn").addClass('disabled');
+                        $('#metamask-id').html(`Connect MetaMask`);
+                        $("#btn-metamask").removeClass('disabled');
+                    }
+
+                    $("#pixelPurchase").modal('show');
+
+                    $('#buy-btn').on('click', function (e) {
+                        buyPixel()
+                    })
                 });
 
         }
