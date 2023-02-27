@@ -25,7 +25,12 @@
                 <!-- <label for="picker">Color Picker</label> -->
             <!--<button id="btn-metamask" type="button" class="btn btn-info">Connect MetaMask</button> -->
             <div class="spacer"></div>
-            <button class="btn btn-info">Buy</button>
+
+            <!-- purchase btn -->
+            
+            <button id="buyPixels" class="btn btn-info">Buy pixels</button>
+            </div>
+            <!-- <button class="btn btn-info">Buy</button> -->
             <!-- </form> -->
           </form>
         </div>
@@ -74,14 +79,11 @@
                 <div class="modal-body">
                   <div id="pixel-info">
                     <hr>
-                    <div class="row justify-content-between">
-                      <p id="pixelName" class="col-5">Pixel</p>
-                      <p class="col-2">x1</p>
-                      <p class="col-3">0.0225MATIC</p>
+                    <div id="modalPixels" class="row justify-content-between">
                     </div>
                     <hr>
                     <div class="row justify-content-end">
-                      <p class="col-4">Total: 0.0225MATIC</p>
+                      <p class="col-4" id="totalBuy">Total: 0.0225MATIC</p>
                     </div>
                   </div>
                   

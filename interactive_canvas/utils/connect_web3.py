@@ -13,7 +13,7 @@ def connect_contract():
         CONTRACT_ABI = json.load(f).get('abi')
         # prev contract: 0x621eB9d5A29306ea50dE3dE7bbbac53F2B4e489a
         # connect to contract
-        contract = w3.eth.contract(address='0x2E81d5bB5aC7EeB5bE89119d9eDB3C8950fEEeAf', abi=CONTRACT_ABI)
+        contract = w3.eth.contract(address='0x54f2dd7c40c5012163F4423f7A84f13e1a14F30a', abi=CONTRACT_ABI)
         return contract
     else:
         return False
