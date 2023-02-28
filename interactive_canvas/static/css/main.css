@@ -72,3 +72,7 @@ body{
 .navbar{
     border-bottom: 1.5px solid #5DC7EC;
 }
+
+.title{
+    color: whitesmoke;
+}

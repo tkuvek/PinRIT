@@ -106,6 +106,9 @@ let DATA = {};
                         $('#pixel-info').hide();
                         $('#buy-btn').hide();
                         $('#pixel-success').show();
+                        $("#modalPixels").empty();
+                        selectedPixel = [];
+                        selectedColors = [];
                         //alert(`Transaction successful: ${receipt.transactionHash}`)
                     }
                 }).catch((error) => {
@@ -240,6 +243,7 @@ let DATA = {};
 
             $('#buy-btn').on('click', function (e) {
                 buyPixel(selectedPixel, selectedColors);
+
             })
 
         }else {

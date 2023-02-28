@@ -17,8 +17,10 @@
     <nav class="navbar bg-body-tertiary navbar-dark bg-dark">
         <div class="container-fluid">
             <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logoOOO">
+            <h1 class="title">PinRIT</h1>
             <div class="d-flex">
-                <button class="btn btn-outline-info" type="submit">How it works</button>
+              
+                <!-- <button class="btn btn-outline-info" type="submit">How it works</button> -->
                 <div class="spacer"></div>
                 <form method="post" action="{{ url_for('buy')}}">
                     <button class="btn btn-info" type="submit">Get your own</button>
@@ -28,7 +30,7 @@
     </nav>
 
     <div class="w-100 d-flex justify-content-center">
-        <img class="w-75 mt-5" src="{{ url_for('static', filename='img/homepage.jpeg') }}" alt="slika">
+        <img class="w-75 mt-5" src="{{ url_for('static', filename='img/hero.svg') }}" alt="slika">
     </div>
     <!-- </div> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
