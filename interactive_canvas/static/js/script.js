@@ -178,6 +178,9 @@ let selectedColors = [];
             });
         }
 
+        let $progBar = $('#myBar');
+        let progbarCount=0;
+
         // fetch data
         let DATA = {};
         for (let i = 0; i < 65; i++) {
@@ -186,6 +189,8 @@ let selectedColors = [];
                 DATA = data;
                 console.log(DATA);
                 $(`#pixel-${i}`).attr("fill", DATA[i+1]);
+                progbarCount+=1.5385;
+                $progBar.css('width', `${progbarCount}%`);
             });
         }
     
