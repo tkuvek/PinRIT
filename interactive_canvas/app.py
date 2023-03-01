@@ -67,10 +67,10 @@ def pixel():
     return response
 
 
-@app.route('/get-mint-data', methods=['GET', 'POST'])
-def get_mint_data():
+@app.route('/get-mint-data/<id>', methods=['GET', 'POST'])
+def get_mint_data(id):
     if contract:
-        data = get_data(contract)
+        data = get_data(contract, id)
         return data
 
 

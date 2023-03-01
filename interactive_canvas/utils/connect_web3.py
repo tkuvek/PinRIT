@@ -19,23 +19,23 @@ def connect_contract():
         return False
 
 #connect web3
-def get_data(contract):
+def get_data(contract, i):
     minted_pixels = {}
     #get token uri
-    try:
-        for i in range(100):
-            i+=1
-            token_uri = contract.functions.tokenURI(i).call()
+    # try:
+    # for i in range(30):
+    i=int(i)
+        # token_uri = contract.functions.tokenURI(i).call()
 
-            #get token color
-            token_color = contract.functions.tokenIdToColor(i).call()
-            # print(token_color)
-            minted_pixels[i] = token_color
+        #get token color
+    token_color = contract.functions.tokenIdToColor(i).call()
+    # print(token_color)
+    minted_pixels[i] = token_color
             # print(minted_pixels)
 
             # converting token_uri
-            token_uri = token_uri.replace('data:application/json;base64,', '')
-            token_uri = token_uri.encode()
+            # token_uri = token_uri.replace('data:application/json;base64,', '')
+            # token_uri = token_uri.encode()
 
             # img_json = json.loads(base64.b64decode(token_uri))
             # img = img_json.get('image')
@@ -48,8 +48,8 @@ def get_data(contract):
             # new_img.write(img)
             # new_img.close()
 
-    except Exception:
-        return minted_pixels
+    # except Exception:
+    return minted_pixels
 
     # # Print if web3 is successfully connected
     # print(w3.isConnected())

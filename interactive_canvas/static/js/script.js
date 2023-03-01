@@ -10,79 +10,76 @@ let accountAddress;
 
 
 
-let DATA = {};
-(async () => {
-    let res = await $.ajax('/get-mint-data').done(function (data) {
-        DATA = data
-        console.log(DATA)
 
-        // CONNECT METAMASK BUTTON
-        let METAMASK_ID = localStorage.getItem('metamask') ?? '';
+// CONNECT METAMASK BUTTON
+let METAMASK_ID = localStorage.getItem('metamask') ?? '';
 
-        //CONNECT CONTRACT
-        if(window.ethereum && METAMASK_ID.length > 0) {
-            connectContract()
-        }
-        function connectContract() {
-            let contractAddress = "0x54f2dd7c40c5012163F4423f7A84f13e1a14F30a";
+//CONNECT CONTRACT
+if(window.ethereum && METAMASK_ID.length > 0) {
+    connectContract()
+}
 
-            provider = new ethers.providers.Web3Provider(window.ethereum);
-            provider.getNetwork().then(function (result) {
-                console.log(result)
-                if (result['chainId'] === 80001) {
-                    provider.listAccounts().then(function (result) {
-                        console.log(result);
-                        accountAddress = result[0]; // figure out the user's Eth address
+function connectContract() {
+    let contractAddress = "0x54f2dd7c40c5012163F4423f7A84f13e1a14F30a";
 
-                        provider.getBalance(String(result[0])).then(function (balance) {
-                            var myBalance = (balance / ethers.constants.WeiPerEther).toFixed(4);
-                            console.log("Your Balance: " + myBalance);
-                        });
-                    })
-                }
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+    provider.getNetwork().then(function (result) {
+        console.log(result)
+        if (result['chainId'] === 80001) {
+            provider.listAccounts().then(function (result) {
+                console.log(result);
+                accountAddress = result[0]; // figure out the user's Eth address
+
+                provider.getBalance(String(result[0])).then(function (balance) {
+                    var myBalance = (balance / ethers.constants.WeiPerEther).toFixed(4);
+                    console.log("Your Balance: " + myBalance);
+                });
             })
-            // get a signer object so we can do things that need signing
-            signer = provider.getSigner();
-            // init contract,
-            contract = new ethers.Contract(contractAddress, abi.abi, signer);
-            contract.connect(signer)
         }
+    })
+    // get a signer object so we can do things that need signing
+    signer = provider.getSigner();
+    // init contract,
+    contract = new ethers.Contract(contractAddress, abi.abi, signer);
+    contract.connect(signer)
+}
 
 
-        $('#btn-metamask').on('click', function (e) {
-            //window.ethereum ? signIn() : alert("Install MetaMask browser extension!");
+$('#btn-metamask').on('click', function (e) {
+    //window.ethereum ? signIn() : alert("Install MetaMask browser extension!");
 
-            if(window.ethereum) {
-                signIn();
-            }else{
-                $("#btn-metamask").removeClass('disabled');
-                $('#metamask-note').html("Install MetaMask browser extension!");
-            }
-        })
-        const signIn = async () => {
-            let accounts = await window.ethereum.request({ method: "eth_requestAccounts" }).catch(error => alert(JSON.stringify(error.message)));
-            connectContract()
+    if(window.ethereum) {
+        signIn();
+    }else{
+        $("#btn-metamask").removeClass('disabled');
+        $('#metamask-note').html("Install MetaMask browser extension!");
+    }
+});
 
-            $("#mm-address").html(accounts[0]);
-            METAMASK_ID = accounts[0]
-            $('#metamask-id').html(`${METAMASK_ID}`);
-            localStorage.setItem('metamask', `${METAMASK_ID}`);
-            $("#buy-btn").removeClass('disabled');
-            $("#btn-metamask").addClass('disabled');
-        }
+const signIn = async () => {
+    let accounts = await window.ethereum.request({ method: "eth_requestAccounts" }).catch(error => alert(JSON.stringify(error.message)));
+    connectContract()
 
-
-        //COLOR PICKER
-        let color = $("#picker")[0].value;
-        $("#picker").on('change', function (e) {
-            color = $(this)[0].value;
-        });
+    $("#mm-address").html(accounts[0]);
+    METAMASK_ID = accounts[0]
+    $('#metamask-id').html(`${METAMASK_ID}`);
+    localStorage.setItem('metamask', `${METAMASK_ID}`);
+    $("#buy-btn").removeClass('disabled');
+    $("#btn-metamask").addClass('disabled');
+}
 
 
-        // SELECTED PIXEL
-        // let selectedPixel = ''
-        let selectedPixel = [];
-        let selectedColors = [];
+//COLOR PICKER
+let color = $("#picker")[0].value;
+$("#picker").on('change', function (e) {
+    color = $(this)[0].value;
+});
+
+
+// SELECTED PIXEL
+// let selectedPixel = ''
+let selectedPixel = [];
+let selectedColors = [];
 
 
         // BUY PIXEL BUTTON
@@ -144,16 +141,6 @@ let DATA = {};
         let start_zoom = 15;
         let zoom = d3.zoom().scaleExtent([start_zoom, 100]).translateExtent([[0, 0], [size, size]]);
 
-        // // PURCHASE button created dynamically
-        // var button = document.createElement("button");
-        // button.id = "purchase-btn";
-        // button.type = "button";
-        // button.classList.add("btn", "btn-info");
-        // button.innerText = "Purchase pixel(s)";
-        // document.getElementById("purchaseBtn").appendChild(button);
-        // // useful later
-        // // document.getElementById("purchase-btn").disabled = true;
-
         let svg = d3.select('svg')
             .attr('viewbox', "0 0 " + size + " " + size)
             .call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(start_zoom))
@@ -163,7 +150,6 @@ let DATA = {};
             .append("g")
             .attr('transform', `translate(${0}, ${0})scale(${start_zoom})`);
 
-        console.log(DATA.length)
         // DRAW INITIAL PIXELS (size*size)
         let y = 0;
         for (let i = 0; i < size * size; i++) {
@@ -178,79 +164,74 @@ let DATA = {};
                 .attr("y", y)
                 .attr("width", 1)
                 .attr("height", 1)
-                .attr("fill", DATA[i + 1] ? DATA[i + 1] : "#000000")
 
+            // ZA KUPOVINU PIXELA, on purchase button click
+            .on("click", function (e) {
+                // change color
+                let p = d3.select(this).attr("fill", color);
 
-                // TRIGGER ON CLICK pixel actions
-                // .on("click", function (e) {
-                //     // change color
-                //     let p = d3.select(this).attr("fill", color);
-                //     selectedPixel = p.attr('id')
+                selectedPixel.push(parseInt(p.attr('id').replace("pixel-", "")) + 1);
+                selectedColors.push(color);
 
-                //     console.log("selected pixel id: " + p.attr('id') + " , color to change:" + color)
+                console.log("selected pixel id: " + p.attr('id') + " , color to change:" + color)
 
-                //     // todo: add to buy button
-                //     buyPixel()
-                // });
-
-                // ZA KUPOVINU PIXELA, on purchase button click
-                .on("click", function (e) {
-                    // change color
-                    let p = d3.select(this).attr("fill", color);
-
-                    selectedPixel.push(parseInt(p.attr('id').replace("pixel-", "")) + 1);
-                    selectedColors.push(color);
-
-                    console.log("selected pixel id: " + p.attr('id') + " , color to change:" + color)
-
-                });
+            });
         }
 
-
-        $modalPixels =  $("#modalPixels");
-        document.getElementById("buyPixels").addEventListener("click", function (e) {
-            e.preventDefault();
-
-            if (selectedPixel.length > 0) {
-                $('#pixelPurchaseLabel').html("Pixel Purchase")
-                count=0;
-                // $modalPixels.remove();
-
-                selectedColors.forEach(c => {
-                    $modalPixels.append(`<p class='col-5'>Pixel color - ${c}`);
-                    $modalPixels.append(`<p class='col-2'>x1`);
-                    $modalPixels.append(`<p class='col-3'>0.02MATIC`);
-                    count+=0.02
-                });
-                $('#metamask-note').html("");
-                $('#pixel-success').hide();
-                $('#pixel-fail').hide();
-                $('#pixel-info').show();
-                $('#buy-btn').show();
-                $("#totalBuy").html('Total estimate: '+count+'MATIC')
-
-                if(METAMASK_ID !=  '') {
-                    $("#buy-btn").removeClass('disabled');
-                    $('#metamask-id').html(`${METAMASK_ID}`);
-                    $("#btn-metamask").addClass('disabled');
-                }else{
-                    $("#buy-btn").addClass('disabled');
-                    $('#metamask-id').html(`Connect MetaMask`);
-                    $("#btn-metamask").removeClass('disabled');
-                }
-                $("#pixelPurchase").modal('show');
-
-
-            $('#buy-btn').on('click', function (e) {
-                buyPixel(selectedPixel, selectedColors);
-
-            })
-
-        }else {
-                alert("Please choose either one or more pixels to purchase.")
+        // fetch data
+        let DATA = {};
+        for (let i = 0; i < 65; i++) {
+        
+            let res = $.ajax(`/get-mint-data/${i+1}`).done(function (data) {
+                DATA = data;
+                console.log(DATA);
+                $(`#pixel-${i}`).attr("fill", DATA[i+1]);
+            });
         }
+    
+
+
+$modalPixels =  $("#modalPixels");
+document.getElementById("buyPixels").addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (selectedPixel.length > 0) {
+        $('#pixelPurchaseLabel').html("Pixel Purchase")
+        count=0;
+        // $modalPixels.remove();
+
+        selectedColors.forEach(c => {
+            $modalPixels.append(`<p class='col-5'>Pixel color - ${c}`);
+            $modalPixels.append(`<p class='col-2'>x1`);
+            $modalPixels.append(`<p class='col-3'>0.02MATIC`);
+            count+=0.02
         });
+        $('#metamask-note').html("");
+        $('#pixel-success').hide();
+        $('#pixel-fail').hide();
+        $('#pixel-info').show();
+        $('#buy-btn').show();
+        $("#totalBuy").html('Total estimate: '+count+'MATIC')
+
+        if(METAMASK_ID !=  '') {
+            $("#buy-btn").removeClass('disabled');
+            $('#metamask-id').html(`${METAMASK_ID}`);
+            $("#btn-metamask").addClass('disabled');
+        }else{
+            $("#buy-btn").addClass('disabled');
+            $('#metamask-id').html(`Connect MetaMask`);
+            $("#btn-metamask").removeClass('disabled');
+        }
+        $("#pixelPurchase").modal('show');
+
+        $('#buy-btn').on('click', function (e) {
+            buyPixel(selectedPixel, selectedColors);
+        })
+
+    }else {
+            alert("Please choose either one or more pixels to purchase.")
+    }
+});
 
 
-    });
-})();
+// })();
