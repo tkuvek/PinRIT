@@ -75,8 +75,8 @@ $("#picker").on('change', function (e) {
 
 
 // SELECTED PIXEL
-// let selectedPixel = ''
-let selectedPixel = [];
+// let selectedPixels = ''
+let selectedPixels = [];
 let selectedColors = [];
 
 
@@ -102,7 +102,7 @@ let selectedColors = [];
                         $('#buy-btn').hide();
                         $('#pixel-success').show();
                         $("#modalPixels").empty();
-                        selectedPixel = [];
+                        selectedPixels = [];
                         selectedColors = [];
                         //alert(`Transaction successful: ${receipt.transactionHash}`)
                     }
@@ -165,38 +165,43 @@ let selectedColors = [];
 
             // ZA KUPOVINU PIXELA, on purchase button click
             .on("click", function (e) {
-                // change color
-                let p = d3.select(this).attr("fill", color);
+                let p = d3.select(this)
+                let pId = parseInt(d3.select(this).attr('id').replace("pixel-", ""));
+                let pColor = d3.select(this).attr('fill');
 
-                selectedPixel.push(parseInt(p.attr('id').replace("pixel-", "")) + 1);
-                selectedColors.push(color);
-
-                console.log("selected pixel id: " + p.attr('id') + " , color to change:" + color)
-
+                if (selectedPixels.some((pixelId) => pixelId === pId)) {
+                    d3.select(this).attr('fill', PIXEL_COLORS[pId]);
+                    selectedPixels = selectedPixels.filter((pixel) => pixel !== pId);
+                    selectedColors = selectedColors.filter((color) => color !== pColor);
+                } else {
+                    d3.select(this).attr('fill', color);
+                    selectedPixels.push(pId);
+                    selectedColors.push(color);
+                }
             });
         }
 
     let $progBar = $('#myBar');
     let progbarCount=0;
 
-    // fetch data
-    let DATA = {};
-    for (let i = 0; i < 65; i++) {
-    
-        let res = $.ajax(`/get-mint-data/${i+1}`).done(function (data) {
-            DATA = data;
-    
-            $(`#pixel-${i}`).attr("fill", DATA[i+1]);
-
-            progbarCount+=1.5385;
-            $progBar.css('width', `${progbarCount}%`);
-            if ($progBar.prop('style')['width'] === '100.002%') {
-                console.log(`success: ${i+1} pixels loaded`);
-                $progBar.css('display', 'none');
-                $('#myProgress').css('display', 'none');
-            }
-        });
-    }
+        // fetch data
+        let DATA = {};
+        let PIXEL_COLORS = [];
+        for (let i = 0; i < 65; i++) {
+        
+            let res = $.ajax(`/get-mint-data/${i+1}`).done(function (data) {
+                DATA = data;
+                $(`#pixel-${i}`).attr("fill", DATA[i+1]);
+                PIXEL_COLORS.push(DATA[i+1]);
+                progbarCount+=1.5385;
+                $progBar.css('width', `${progbarCount}%`);
+                if ($progBar.prop('style')['width'] === '100.002%') {
+                    console.log(`success: ${i+1} pixels loaded`);
+                    $progBar.css('display', 'none');
+                    $('#myProgress').css('display', 'none');
+                }
+            });
+        }
 
 $modalPixels =  $("#modalPixels");
 $('#close-modal').on("click", function (e) {
@@ -206,7 +211,7 @@ $('#close-modal').on("click", function (e) {
 document.getElementById("buyPixels").addEventListener("click", function (e) {
     e.preventDefault();
 
-    if (selectedPixel.length > 0) {
+    if (selectedPixels.length > 0) {
         $('#pixelPurchaseLabel').html("Pixel Purchase")
         count=0;
         // $modalPixels.remove();
@@ -236,7 +241,7 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
         $("#pixelPurchase").modal('show');
 
         $('#buy-btn').on('click', function (e) {
-            buyPixel(selectedPixel, selectedColors);
+            buyPixel(selectedPixels, selectedColors);
         })
 
     }else {
