@@ -9,8 +9,6 @@ let signer;
 let accountAddress;
 
 
-
-
 // CONNECT METAMASK BUTTON
 let METAMASK_ID = localStorage.getItem('metamask') ?? '';
 
@@ -178,25 +176,33 @@ let selectedColors = [];
             });
         }
 
-        let $progBar = $('#myBar');
-        let progbarCount=0;
+    let $progBar = $('#myBar');
+    let progbarCount=0;
 
-        // fetch data
-        let DATA = {};
-        for (let i = 0; i < 65; i++) {
-        
-            let res = $.ajax(`/get-mint-data/${i+1}`).done(function (data) {
-                DATA = data;
-                console.log(DATA);
-                $(`#pixel-${i}`).attr("fill", DATA[i+1]);
-                progbarCount+=1.5385;
-                $progBar.css('width', `${progbarCount}%`);
-            });
-        }
+    // fetch data
+    let DATA = {};
+    for (let i = 0; i < 65; i++) {
     
+        let res = $.ajax(`/get-mint-data/${i+1}`).done(function (data) {
+            DATA = data;
+    
+            $(`#pixel-${i}`).attr("fill", DATA[i+1]);
 
+            progbarCount+=1.5385;
+            $progBar.css('width', `${progbarCount}%`);
+            if ($progBar.prop('style')['width'] === '100.002%') {
+                console.log(`success: ${i+1} pixels loaded`);
+                $progBar.css('display', 'none');
+                $('#myProgress').css('display', 'none');
+            }
+        });
+    }
 
 $modalPixels =  $("#modalPixels");
+$('#close-modal').on("click", function (e) {
+    $modalPixels.empty();
+});
+
 document.getElementById("buyPixels").addEventListener("click", function (e) {
     e.preventDefault();
 
@@ -237,6 +243,3 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
             alert("Please choose either one or more pixels to purchase.")
     }
 });
-
-
-// })();

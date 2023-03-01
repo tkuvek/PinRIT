@@ -17,7 +17,7 @@
   <nav class="nv bg-body-tertiary navbar-dark bg-dark">
     <div class="row">
       <div class="col-md-2">
-        <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logoOOO">
+        <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logoOOO"></a>
       </div>
 
       <div class="progbar col-md-7">
@@ -59,7 +59,7 @@
 
         <div id="metamask-conn" class="modal-header">
           <h1 class="modal-title fs-5" id="pixelPurchaseLabel">Pixel Purchase</h1>
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button id='close-modal' type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
 
         <div id="metamask-div" class="row justify-content-center mt-2">

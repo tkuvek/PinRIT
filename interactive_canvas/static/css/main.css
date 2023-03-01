@@ -74,6 +74,12 @@ body{
     padding: 1em 2em;
 }
 
+.navbar{
+    border-bottom: 1.5px solid #5DC7EC;
+    padding: 0.7em 1.25em;
+
+}
+
 
 .title{
     color: whitesmoke;
