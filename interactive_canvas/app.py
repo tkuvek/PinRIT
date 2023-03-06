@@ -70,7 +70,7 @@ def pixel():
 def get_mint_data(id):
     if contract:
         data = get_data(contract, id)
-        ordered_data = dict(sorted(data.items(), key=lambda x: int(x[0])))
+        data = dict(sorted(data.items(), key=lambda x: int(x[0])))
         return data
 
 
