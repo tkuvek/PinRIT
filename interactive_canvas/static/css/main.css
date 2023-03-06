@@ -102,3 +102,10 @@ body{
     height: 12px;
     background-color: #5DC7EC;
 }
+.pixel {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+  }

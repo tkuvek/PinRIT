@@ -66,11 +66,11 @@ def pixel():
     response.content_type = 'image/svg+xml'
     return response
 
-
 @app.route('/get-mint-data/<id>', methods=['GET', 'POST'])
 def get_mint_data(id):
     if contract:
         data = get_data(contract, id)
+        ordered_data = dict(sorted(data.items(), key=lambda x: int(x[0])))
         return data
 
 

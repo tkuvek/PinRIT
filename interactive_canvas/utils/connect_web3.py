@@ -2,6 +2,8 @@ from web3 import Web3
 import json
 import base64
 from os import getcwd
+from collections import OrderedDict
+import collections
 
 CONTRACT_ABI = ''
 alchemy_url = 'https://polygon-mumbai.g.alchemy.com/v2/CeMUark81xzX_GxKXhLXzHoy1ZYRfMu-'
@@ -18,7 +20,17 @@ def connect_contract():
     else:
         return False
 
-#connect web3
+# def get_data(contract, max_id):
+#     minted_pixels = {}
+#     for i in range(1, max_id+1):
+#         token_color = contract.functions.tokenIdToColor(i).call()
+#         minted_pixels[i] = token_color
+    
+#     ordered_data = collections.OrderedDict(sorted(minted_pixels.items()))
+#     return ordered_data
+
+
+# connect web3
 def get_data(contract, i):
     minted_pixels = {}
     #get token uri
