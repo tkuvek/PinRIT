@@ -80,6 +80,11 @@ body{
 
 }
 
+.video{
+    width: 70vw;
+    height: 70vh;
+}
+
 
 .title{
     color: whitesmoke;

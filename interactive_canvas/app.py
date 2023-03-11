@@ -21,6 +21,12 @@ def buy():
     # if request.method == "POST":
         return render_template('buy.html')
 
+#enaaa
+@app.route('/info',  methods=["GET", "POST"])
+def info():
+    # if request.method == "POST":
+        return render_template('info.html')
+
 
 # ORIGINALNI
 # @app.route('/buy-pixel', methods=['GET', 'POST'])
