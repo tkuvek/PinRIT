@@ -70,6 +70,9 @@ const signIn = async () => {
 //COLOR PICKER
 let color = $("#picker")[0].value;
 $("#picker").on('change', function (e) {
+    selectedFile = "";
+    $("#image").empty();
+    
     color = $(this)[0].value;
 });
 
@@ -155,9 +158,10 @@ let selectedColors = [];
             let randomColor = Math.floor(Math.random() * 16777215).toString(16);
             if (i % size == 0) y += 1
 
+            let id = "pixel-" + i;
             svg.append('rect')
                 .attr("class", "pixel")
-                .attr("id", "pixel-" + i)
+                .attr("id", id)
                 .attr("x", x)
                 .attr("y", y)
                 .attr("width", 1)
@@ -174,9 +178,15 @@ let selectedColors = [];
                     selectedPixels = selectedPixels.filter((pixel) => pixel !== pId);
                     selectedColors = selectedColors.filter((color) => color !== pColor);
                 } else {
-                    d3.select(this).attr('fill', color);
-                    selectedPixels.push(pId);
-                    selectedColors.push(color);
+                    if(selectedFile !== "") {
+                        d3.select('svg').append("defs").append("pattern").attr("id", `${pId}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", URL.createObjectURL(selectedFile)).attr("width", 1).attr("height", 1);
+                        d3.select(this).attr("fill",`url(#${pId})`);
+                    }
+                    else{
+                        d3.select(this).attr('fill', color);
+                        selectedPixels.push(pId);
+                        selectedColors.push(color);
+                    }
                 }
             });
         }
@@ -206,6 +216,43 @@ let selectedColors = [];
 $modalPixels =  $("#modalPixels");
 $('#close-modal').on("click", function (e) {
     $modalPixels.empty();
+});
+
+var files = [];
+var selectedFile = "";
+document.getElementById("myCollection").addEventListener("click", function (e) {
+    e.preventDefault();
+    $("#myCollectionModal").modal('show');
+});
+
+document.getElementById("upload-btn").addEventListener("click", function (e) {
+    const file = document.getElementById('file');
+    if(file.files.length !== 0) {
+        $("#collection-body").empty();
+
+        files.push(file.files[0]);
+        var counter = 0;
+        files.forEach((file) => {
+            var url = URL.createObjectURL(file);
+            $("#collection-body").append(`<img id="img-${counter}" class="m-2 upload-img" src="${url}" alt="img">`);
+
+            document.getElementById(`img-${counter}`).addEventListener("click", function (e) {
+                $("#collection-body").children().removeAttr("style");
+                $(this).css('border', "solid 2px red");  
+                selectedFile = file;
+            });
+            counter++;
+        });
+
+        document.getElementById("btn-use").addEventListener("click", function (e) {
+            e.preventDefault();
+            if(selectedFile!=="") {
+                $("#image").empty();
+                var url2 = URL.createObjectURL(selectedFile);
+                $("#image").append(`<img class="m-2" src="${url2}" alt="img">`);
+            }
+        });
+    }
 });
 
 document.getElementById("buyPixels").addEventListener("click", function (e) {

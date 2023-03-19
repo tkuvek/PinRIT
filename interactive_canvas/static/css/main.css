@@ -107,3 +107,8 @@ body{
     height: 12px;
     background-color: #5DC7EC;
 }
+
+#image{
+    width: 2vw;
+    height: 2vh;
+}
