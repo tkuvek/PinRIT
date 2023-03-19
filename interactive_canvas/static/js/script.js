@@ -175,15 +175,18 @@ let selectedColors = [];
 
                 if (selectedPixels.some((pixelId) => pixelId === pId)) {
                     d3.select(this).attr('fill', PIXEL_COLORS[pId]);
+                    d3.select(this).style('stroke', null);
                     selectedPixels = selectedPixels.filter((pixel) => pixel !== pId);
                     selectedColors = selectedColors.filter((color) => color !== pColor);
                 } else {
                     if(selectedFile !== "") {
                         d3.select('svg').append("defs").append("pattern").attr("id", `${pId}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", URL.createObjectURL(selectedFile)).attr("width", 1).attr("height", 1);
                         d3.select(this).attr("fill",`url(#${pId})`);
+                        d3.select(this).style('stroke', 'white').style('stroke-width', '0.1px');
                     }
                     else{
                         d3.select(this).attr('fill', color);
+                        d3.select(this).style('stroke', 'white').style('stroke-width', '0.1px');
                         selectedPixels.push(pId);
                         selectedColors.push(color);
                     }
