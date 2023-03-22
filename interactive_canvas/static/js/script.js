@@ -3,7 +3,7 @@ let provider;
 let contract;
 let signer;
 let accountAddress;
-let numMinted = 2;
+let numMinted = 152;
 
 // CONNECT METAMASK BUTTON
 let METAMASK_ID = localStorage.getItem('metamask') ?? '';
@@ -177,6 +177,7 @@ for (let i = 0; i < size * size; i++) {
         .attr("y", y)
         .attr("width", 1)
         .attr("height", 1)
+        .attr('fill', '#120F0F')
         // ZA KUPOVINU PIXELA, on purchase button click
         .on("click", function (e) {
             let p = d3.select(this)
@@ -202,7 +203,6 @@ for (let i = 0; i < size * size; i++) {
                     selectedPixels.push(pId+1);
                     selectedColors.push(selectedFile);
                     hasImage = true
-                    // changePixelImage(pId, selectedFile);
                 }
                 else {
                     d3.select(this).attr('fill', color);
@@ -228,7 +228,6 @@ for (let i = 0; i < numMinted; i++) {
 
     let res = $.ajax(`/get-mint-data/${i + 1}`).done(function (data) {
         DATA = data;
-        console.log($(`#${i}`))
         $(`#${i} image`).attr("href", DATA[i + 1]).attr("width", 1).attr("height", 1);
         // d3.select('svg').append("defs").append("pattern").attr("id", `${i}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", DATA[i+1]).attr("width", 1).attr("height", 1);
         $(`#pixel-${i}`).attr("fill", `url(#${i})`);
