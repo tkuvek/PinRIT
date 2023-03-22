@@ -1,7 +1,7 @@
 require('dotenv').config();
 const ethers = require('ethers');
 
-const PIXELS_TO_MINT = 70;
+const PIXELS_TO_MINT = 198;
 
 const API_KEY = process.env.TESTNET_RPC;
 const provider = new ethers.providers.JsonRpcProvider(API_KEY)
@@ -12,7 +12,7 @@ const privateKey = process.env.PRIVATE_KEY
 const signer = new ethers.Wallet(privateKey, provider)
 
 const abi = contract.abi
-const contractAddress = '0x54f2dd7c40c5012163F4423f7A84f13e1a14F30a'
+const contractAddress = '0x53734b36FE7E9f35FD15c7BE1ccA054E9bFaEb3E'
 
 const myNftContract = new ethers.Contract(contractAddress, abi, signer)
 

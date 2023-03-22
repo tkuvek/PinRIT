@@ -52,6 +52,27 @@ contract PinRIT is ERC721URIStorage {
         _setTokenURI(newItemId, getTokenURI(newItemId));
     }
 
+    function getCustomTokenURI(uint256 tokenId, string memory base64svg) public view returns (string memory) {
+        bytes memory dataURI = abi.encodePacked(
+            "{",
+            '"name": "PinRIT Croatia #',
+            tokenId.toString(),
+            '",',
+            '"description": "Editable pixel art",',
+            '"image": "',
+            base64svg,
+            '"',
+            "}"
+        );
+        return
+            string(
+                abi.encodePacked(
+                    "data:application/json;base64,",
+                    Base64.encode(dataURI)
+                )
+            );
+    }
+
     function getTokenURI(uint256 tokenId) public view returns (string memory) {
         bytes memory dataURI = abi.encodePacked(
             "{",
@@ -73,7 +94,7 @@ contract PinRIT is ERC721URIStorage {
             );
     }
 
-    function changeMultipleColors(uint256[] memory tokenIds, string[] memory newColors) public payable {
+    function changeMultiple(uint256[] memory tokenIds, string[] memory newColors) public payable {
         require(tokenIds.length == newColors.length, "Invalid input arrays");
 
         for (uint256 i = 0; i < tokenIds.length; i++) {
@@ -82,27 +103,27 @@ contract PinRIT is ERC721URIStorage {
 
             string memory newColor = newColors[i];
 
-            require(_exists(tokenId), "Please use an existing token");
-            require(
-                ownerOf(tokenId) == msg.sender,
-                "You must own the pixel before changing it's color"
-            );
+            uint length = bytes(newColor).length;
 
-            tokenIdToColor[tokenId] = newColor;
-            _setTokenURI(tokenId, getTokenURI(tokenId));
+            if (length > 10) {
+                require(_exists(tokenId), "Please use an existing token");
+                require(
+                    ownerOf(tokenId) == msg.sender,
+                    "You must own the pixel before changing it's svg"
+                );
+
+                tokenIdToColor[tokenId] = newColor;
+                _setTokenURI(tokenId, getCustomTokenURI(tokenId, newColor));
+            } else {
+                require(_exists(tokenId), "Please use an existing token");
+                require(
+                    ownerOf(tokenId) == msg.sender,
+                    "You must own the pixel before changing it's color"
+                );
+
+                tokenIdToColor[tokenId] = newColor;
+                _setTokenURI(tokenId, getTokenURI(tokenId));
+            }
         }
-    }
-
-    function changeColor(uint256 tokenId, string memory newColor) public payable {
-        _transfer(ownerOf(tokenId), msg.sender, tokenId);
-
-        require(_exists(tokenId), "Please use an existing token");
-        require(
-            ownerOf(tokenId) == msg.sender,
-            "You must own the pixel before changing it's color"
-        );
-
-        tokenIdToColor[tokenId] = newColor;
-        _setTokenURI(tokenId, getTokenURI(tokenId));
     }
 }

@@ -27,12 +27,12 @@
       </div>
       <div class="col-md-3">
 
-        <form class="d-flex flex-row-reverse">
+        <form class="d-flex flex-row-reverse align-items-center">
           <!-- purchase btn -->
           <button id="buyPixels" class="btn btn-info ms-4">Buy pixels</button>
           <button id="myCollection" class="btn btn-info ms-4">My collection</button>
-          <div id="image"></div>  
-          <input type="color" value="#4f54d8" id="picker" class="pl-2 mt-2">
+          <img id="image" width="50" height="50" class="ms-4" style="display: none;"/>
+          <input type="color" value="#4f54d8" id="picker" class="">
         </form>
       </div>
     </div>
@@ -96,7 +96,7 @@
         </div>
 
         <div class="row justify-content-center mb-3">
-          <button id="btn-buy" type="button" class="btn btn-buy btn-info col-8">Buy</button>
+          <button id="buy-btn" type="button" class="btn btn-buy btn-info col-8">Buy</button>
         </div>
 
       </div>
@@ -113,17 +113,16 @@
         <button id='close-modal' type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
-      <div class="row justify-content-center m-2">
-        <input type="file" id="file" accept="image/svg" class="col-8">
-        <button id="upload-btn" class="btn btn-info col-2">Upload</button>
-      </div>
+
 
       <div id="collection-body" class="modal-body">
       </div>
-
-      <div class="row justify-content-center mb-3">
+      <div class="modal-footer">
+      <div class="row justify-content-between mb-3 align-items-center">
         <button id="btn-use" type="button" class="btn btn-use btn-info col-2">Use</button>
+        <input type="file" id="file" accept=".svg" class="col-8">
       </div>
+    </div>
     </div>
   </div>
 </div>
@@ -137,6 +136,7 @@
   <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="application/javascript"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://d3js.org/d3.v5.js"></script>
+  <script src="{{ url_for('static', filename='js/abi.js') }}"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 

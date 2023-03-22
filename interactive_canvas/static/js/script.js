@@ -1,37 +1,27 @@
-let abi = {
-    "abi":  
-        [{"inputs":[],"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"approved","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"owner","type":"address"},{"indexed":true,"internalType":"address","name":"operator","type":"address"},{"indexed":false,"internalType":"bool","name":"approved","type":"bool"}],"name":"ApprovalForAll","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"from","type":"address"},{"indexed":true,"internalType":"address","name":"to","type":"address"},{"indexed":true,"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"Transfer","type":"event"},{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"approve","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"string","name":"newColor","type":"string"}],"name":"changeColor","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256[]","name":"tokenIds","type":"uint256[]"},{"internalType":"string[]","name":"newColors","type":"string[]"}],"name":"changeMultipleColors","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"generateCharacter","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getApproved","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"getTokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"owner","type":"address"},{"internalType":"address","name":"operator","type":"address"}],"name":"isApprovedForAll","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"mint","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"ownerOf","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"},{"internalType":"bytes","name":"data","type":"bytes"}],"name":"safeTransferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"operator","type":"address"},{"internalType":"bool","name":"approved","type":"bool"}],"name":"setApprovalForAll","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"bytes4","name":"interfaceId","type":"bytes4"}],"name":"supportsInterface","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"view","type":"function"},{"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"tokenIdToColor","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"tokenURI","outputs":[{"internalType":"string","name":"","type":"string"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"tokenId","type":"uint256"}],"name":"transferFrom","outputs":[],"stateMutability":"nonpayable","type":"function"}]
-}
-
+let abi = ABI
 let provider;
 let contract;
 let signer;
 let accountAddress;
-
+let numMinted = 2;
 
 // CONNECT METAMASK BUTTON
 let METAMASK_ID = localStorage.getItem('metamask') ?? '';
 
 //CONNECT CONTRACT
-if(window.ethereum && METAMASK_ID.length > 0) {
+if (window.ethereum && METAMASK_ID.length > 0) {
     connectContract()
 }
 
 function connectContract() {
-    let contractAddress = "0x54f2dd7c40c5012163F4423f7A84f13e1a14F30a";
+    let contractAddress = "0x53734b36FE7E9f35FD15c7BE1ccA054E9bFaEb3E";
 
     provider = new ethers.providers.Web3Provider(window.ethereum);
     provider.getNetwork().then(function (result) {
-        console.log(result)
         if (result['chainId'] === 80001) {
             provider.listAccounts().then(function (result) {
                 console.log(result);
                 accountAddress = result[0]; // figure out the user's Eth address
-
-                provider.getBalance(String(result[0])).then(function (balance) {
-                    var myBalance = (balance / ethers.constants.WeiPerEther).toFixed(4);
-                    console.log("Your Balance: " + myBalance);
-                });
             })
         }
     })
@@ -44,11 +34,9 @@ function connectContract() {
 
 
 $('#btn-metamask').on('click', function (e) {
-    //window.ethereum ? signIn() : alert("Install MetaMask browser extension!");
-
-    if(window.ethereum) {
+    if (window.ethereum) {
         signIn();
-    }else{
+    } else {
         $("#btn-metamask").removeClass('disabled');
         $('#metamask-note').html("Install MetaMask browser extension!");
     }
@@ -72,7 +60,9 @@ let color = $("#picker")[0].value;
 $("#picker").on('change', function (e) {
     selectedFile = "";
     $("#image").empty();
-    
+    $("#image").attr("src", null);
+    $("#image").css("display", "none");
+
     color = $(this)[0].value;
 });
 
@@ -83,179 +73,234 @@ let selectedPixels = [];
 let selectedColors = [];
 
 
-        // BUY PIXEL BUTTON
-        async function buyPixel(pixels, colors) {
-            if (pixels.length > 0) {
-                console.log(pixels);
-                console.log(colors);
+// async function changePixelImage(pixel, svg) {
+//     let tx = await contract.changePixelSvg(
+//         pixel,
+//         svg,
+//         {
+//             value: ethers.utils.parseEther("0"), // price of the transaction
+//             from: accountAddress, // address which will be charged for the transaction
+//             gasPrice: ethers.utils.parseEther("0.000005"), // price of gas fee
+//             gasLimit: hasImage ? 2000000 : 300000// over 9 (hundred) thousand(s)
+//         });
+//     await tx.wait().then((receipt) => {
+//         alert(`Transaction successful: ${receipt.transactionHash}`)
+//     }).catch((error) => {
+//         alert(`Transaction unsuccessful. Error: ${error}`)
+//     })
+// }
 
-                let tx = await contract.changeMultipleColors(
-                    pixels,
-                    colors, // pass the colors array to the smart contract
-                    {
-                        value: ethers.utils.parseEther("0"), // price of the transaction
-                        from: accountAddress, // address which will be charged for the transaction
-                        gasPrice: ethers.utils.parseEther("0.0000001"), // price of gas fee
-                        gasLimit: 200000*pixels.length // over 9 (hundred) thousand(s)
-                    }); 
-                await tx.wait().then((receipt) => {
-                    if (receipt.status === 1) {
-                        $('#pixelPurchaseLabel').html("Success");
-                        $('#pixel-info').hide();
-                        $('#buy-btn').hide();
-                        $('#pixel-success').show();
-                        $("#modalPixels").empty();
-                        selectedPixels = [];
-                        selectedColors = [];
-                        //alert(`Transaction successful: ${receipt.transactionHash}`)
-                    }
-                }).catch((error) => {
-                    
-                    $('#pixelPurchaseLabel').html("Fail")
-                    $('#pixel-info').hide();
-                    $('#buy-btn').hide();
-                    $('#pixel-fail').show();
-                   alert(`Transaction unsuccessful. Error: ${error}`)
-                })
 
-                $.ajax({
-                    url: '/buy-pixel',
-                    type: 'POST',
-                    data: {
-                        metamask_id: METAMASK_ID,
-                        pixels: pixels,
-                        color: color
-                    },
-                    success: async function (response) {
-        
-                    },
-                    error: function (response) {
-                    }
-                });
+// BUY PIXEL BUTTON
+async function buyPixel(pixels, colors) {
+
+    if (pixels.length > 0) {
+        console.log(pixels);
+        console.log(colors);
+
+        let tx = await contract.changeMultiple(
+            pixels,
+            colors, // pass the colors array to the smart contract
+            {
+                value: ethers.utils.parseEther("0"), // price of the transaction
+                from: accountAddress, // address which will be charged for the transaction
+                gasPrice: ethers.utils.parseEther("0.000000001000000016"), // price of gas fee
+                gasLimit: 10947513 // over 9 (hundred) thousand(s)
+            });
+        await tx.wait().then((receipt) => {
+            if (receipt.status === 1) {
+                $('#pixelPurchaseLabel').html("Success");
+                $('#pixel-info').hide();
+                $('#buy-btn').hide();
+                $('#pixel-success').show();
+                $("#modalPixels").empty();
+                //remove border
+                for (i in selectedPixels) {
+                    $('#pixel-'+(parseInt(selectedPixels[i])-1)).attr('style', 'stroke: null');
+                }
+                selectedPixels = [];
+                selectedColors = [];
+                //alert(`Transaction successful: ${receipt.transactionHash}`)
             }
-        }
+        }).catch((error) => {
+
+            $('#pixelPurchaseLabel').html("Fail")
+            $('#pixel-info').hide();
+            $('#buy-btn').hide();
+            $('#pixel-fail').show();
+            alert(`Transaction unsuccessful. Error: ${error}`)
+        })
+
+        // $.ajax({
+        //     url: '/buy-pixel',
+        //     type: 'POST',
+        //     data: {
+        //         metamask_id: METAMASK_ID,
+        //         pixels: pixels,
+        //         color: color
+        //     },
+        //     success: async function (response) {
+        //     },
+        //     error: function (response) {
+        //     }
+        // });
+    }
+}
 
 
-        // CREATE D3 SVG
-        let map = document.getElementById('#map');
-        let size = 100;
-        let start_zoom = 15;
-        let zoom = d3.zoom().scaleExtent([start_zoom, 100]).translateExtent([[0, 0], [size, size]]);
+// CREATE D3 SVG
+let map = document.getElementById('#map');
+let size = 100;
+let start_zoom = 15;
+let zoom = d3.zoom().scaleExtent([start_zoom, 100]).translateExtent([[0, 0], [size, size]]);
 
-        let svg = d3.select('svg')
-            .attr('viewbox', "0 0 " + size + " " + size)
-            .call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(start_zoom))
-            .call(zoom.on('zoom', (event) => {
-                svg.attr('transform', d3.event.transform);
-            }))
-            .append("g")
-            .attr('transform', `translate(${0}, ${0})scale(${start_zoom})`);
+let svg = d3.select('svg')
+    .attr('viewbox', "0 0 " + size + " " + size)
+    .call(zoom.transform, d3.zoomIdentity.translate(0, 0).scale(start_zoom))
+    .call(zoom.on('zoom', (event) => {
+        svg.attr('transform', d3.event.transform);
+    }))
+    .append("g")
+    .attr('transform', `translate(${0}, ${0})scale(${start_zoom})`);
 
-        // DRAW INITIAL PIXELS (size*size)
-        let y = 0;
-        for (let i = 0; i < size * size; i++) {
-            let x = i % size
-            let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-            if (i % size == 0) y += 1
+// DRAW INITIAL PIXELS (size*size)
+let y = 0;
+for (let i = 0; i < size * size; i++) {
+    let x = i % size
+    if (i % size == 0) y += 1
 
-            let id = "pixel-" + i;
-            svg.append('rect')
-                .attr("class", "pixel")
-                .attr("id", id)
-                .attr("x", x)
-                .attr("y", y)
-                .attr("width", 1)
-                .attr("height", 1)
+    let id = "pixel-" + i;
+    svg.append('rect')
+        .attr("class", "pixel")
+        .attr("id", id)
+        .attr("x", x)
+        .attr("y", y)
+        .attr("width", 1)
+        .attr("height", 1)
+        // ZA KUPOVINU PIXELA, on purchase button click
+        .on("click", function (e) {
+            let p = d3.select(this)
+            let pId = parseInt(d3.select(this).attr('id').replace("pixel-", ""));
+            let pColor = d3.select(this).attr('fill');
 
-            // ZA KUPOVINU PIXELA, on purchase button click
-            .on("click", function (e) {
-                let p = d3.select(this)
-                let pId = parseInt(d3.select(this).attr('id').replace("pixel-", ""));
-                let pColor = d3.select(this).attr('fill');
-
-                if (selectedPixels.some((pixelId) => pixelId === pId)) {
-                    d3.select(this).attr('fill', PIXEL_COLORS[pId]);
-                    d3.select(this).style('stroke', null);
-                    selectedPixels = selectedPixels.filter((pixel) => pixel !== pId);
-                    selectedColors = selectedColors.filter((color) => color !== pColor);
-                } else {
-                    if(selectedFile !== "") {
-                        d3.select('svg').append("defs").append("pattern").attr("id", `${pId}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", URL.createObjectURL(selectedFile)).attr("width", 1).attr("height", 1);
-                        d3.select(this).attr("fill",`url(#${pId})`);
-                        d3.select(this).style('stroke', 'white').style('stroke-width', '0.1px');
-                    }
-                    else{
-                        d3.select(this).attr('fill', color);
-                        d3.select(this).style('stroke', 'white').style('stroke-width', '0.1px');
-                        selectedPixels.push(pId);
-                        selectedColors.push(color);
-                    }
+            if (selectedPixels.some((pixelId) => pixelId === pId+1)) {
+                d3.select(this).attr("fill", `url(#${pId})`);
+                d3.select(this).style('stroke', null);
+                // document.getElementById(""+pId).parentNode.remove();
+                $(`#${i} image`).attr("href", DATA[pId + 1])
+                selectedPixels = selectedPixels.filter((pixel) => pixel !== pId);
+                selectedColors = selectedColors.filter((color) => color !== pColor);
+                selectedFile = "";
+                if (selectedColors.every((color) => !color.startsWith('d')))
+                    hasImage = false
+            } else {
+                if (selectedFile !== "") {
+                    $(`#${pId} image`).attr("href", selectedFile).attr("width", 1).attr("height", 1)
+                    // d3.select('svg').append("defs").append("pattern").attr("id", `${pId}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", selectedFile).attr("width", 1).attr("height", 1);
+                    d3.select(this).attr("fill", `url(#${pId})`);
+                    d3.select(this).style('stroke', 'white').style('stroke-width', '0.1px');
+                    selectedPixels.push(pId+1);
+                    selectedColors.push(selectedFile);
+                    hasImage = true
+                    // changePixelImage(pId, selectedFile);
                 }
-            });
-        }
-
-    let $progBar = $('#myBar');
-    let progbarCount=0;
-
-        // fetch data
-        let DATA = {};
-        let PIXEL_COLORS = [];
-        for (let i = 0; i < 65; i++) {
-        
-            let res = $.ajax(`/get-mint-data/${i+1}`).done(function (data) {
-                DATA = data;
-                $(`#pixel-${i}`).attr("fill", DATA[i+1]);
-                PIXEL_COLORS.push(DATA[i+1]);
-                progbarCount+=1.5385;
-                $progBar.css('width', `${progbarCount}%`);
-                if ($progBar.prop('style')['width'] === '100.002%') {
-                    console.log(`success: ${i+1} pixels loaded`);
-                    $progBar.css('display', 'none');
-                    $('#myProgress').css('display', 'none');
+                else {
+                    d3.select(this).attr('fill', color);
+                    d3.select(this).style('stroke', 'white').style('stroke-width', '0.1px');
+                    selectedPixels.push(pId+1);
+                    selectedColors.push(color);
                 }
-            });
-        }
+            }
+        });
+    svg.append("defs").append("pattern").attr("id", `${i}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image")
 
-$modalPixels =  $("#modalPixels");
+}
+
+let $progBar = $('#myBar');
+let progbarCount = 0;
+
+// fetch data
+let hasImage = false
+let DATA = {};
+let PIXEL_COLORS = [];
+let p = 100 / numMinted
+for (let i = 0; i < numMinted; i++) {
+
+    let res = $.ajax(`/get-mint-data/${i + 1}`).done(function (data) {
+        DATA = data;
+        console.log($(`#${i}`))
+        $(`#${i} image`).attr("href", DATA[i + 1]).attr("width", 1).attr("height", 1);
+        // d3.select('svg').append("defs").append("pattern").attr("id", `${i}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", DATA[i+1]).attr("width", 1).attr("height", 1);
+        $(`#pixel-${i}`).attr("fill", `url(#${i})`);
+        PIXEL_COLORS.push(DATA[i + 1]);
+        progbarCount += p;
+        $progBar.css('width', `${progbarCount}%`);
+        if ($progBar.prop('style')['width'] === '100%') {
+            console.log(`success: ${i + 1} pixels loaded`);
+            $progBar.css('display', 'none');
+            $('#myProgress').css('display', 'none');
+        }
+    });
+}
+
+$modalPixels = $("#modalPixels");
 $('#close-modal').on("click", function (e) {
     $modalPixels.empty();
 });
 
-var files = [];
 var selectedFile = "";
+const input = document.getElementById('file');
+$collectionDiv = $("#collection-body");
+
+input.addEventListener('change', function () {
+    let file = input.files[0];
+    let reader = new FileReader();
+    reader.addEventListener('load', function () {
+        let dataUrl = reader.result;
+        let fName = file.name.replace('.svg', '');
+        localStorage.setItem(fName, dataUrl);
+        let $imgP=$(`<div id="img-${fName}" class="d-flex my-3 justify-content-start align-items-center">`)
+        $collectionDiv.append($imgP);
+        $imgP.on('click', function(){
+            $("#collection-body").children().removeAttr("style");
+            $(this).css('border', "solid 2px red");
+            selectedFile = dataUrl;
+        })
+        $imgP.append(`<img class='m-4' src='${dataUrl}' width="50" height="50" />${file.name}</div>`);
+    });
+
+    // document.getElementById(`img-${file.name.replace('.svg', '')}`).addEventListener("click", function (e) {
+    //     $("#collection-body").children().removeAttr("style");
+    //     $(this).css('border', "solid 2px red");
+    //     selectedFile = dataUrl;
+    // });
+    reader.readAsDataURL(file);
+});
+for (let i = 0; i < localStorage.length; i++) {
+    let key = localStorage.key(i);
+    let value = localStorage.getItem(key);
+    if (key !== 'metamask') {
+        $collectionDiv.append(`<div id="img-${key}" class="d-flex my-3 justify-content-start align-items-center"><img class='m-4' src='${value}' width="50" height="50" />${key}</div>`);
+        document.getElementById(`img-${key}`).addEventListener("click", function (e) {
+            $("#collection-body").children().removeAttr("style");
+            $(this).css('border', "solid 2px red");
+            selectedFile = value;
+        });
+    }
+}
+
+document.getElementById("btn-use").addEventListener("click", function (e) {
+    e.preventDefault();
+    if (selectedFile !== "") {
+        $("#image").empty();
+        $("#image").attr("src", `${selectedFile}`);
+        $("#image").css("display", "flex");
+    }
+});
+
 document.getElementById("myCollection").addEventListener("click", function (e) {
     e.preventDefault();
     $("#myCollectionModal").modal('show');
-});
-
-document.getElementById("upload-btn").addEventListener("click", function (e) {
-    const file = document.getElementById('file');
-    if(file.files.length !== 0) {
-        $("#collection-body").empty();
-
-        files.push(file.files[0]);
-        var counter = 0;
-        files.forEach((file) => {
-            var url = URL.createObjectURL(file);
-            $("#collection-body").append(`<img id="img-${counter}" class="m-2 upload-img" src="${url}" alt="img">`);
-
-            document.getElementById(`img-${counter}`).addEventListener("click", function (e) {
-                $("#collection-body").children().removeAttr("style");
-                $(this).css('border', "solid 2px red");  
-                selectedFile = file;
-            });
-            counter++;
-        });
-
-        document.getElementById("btn-use").addEventListener("click", function (e) {
-            e.preventDefault();
-            if(selectedFile!=="") {
-                $("#image").empty();
-                var url2 = URL.createObjectURL(selectedFile);
-                $("#image").append(`<img class="m-2" src="${url2}" alt="img">`);
-            }
-        });
-    }
 });
 
 document.getElementById("buyPixels").addEventListener("click", function (e) {
@@ -263,27 +308,27 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
 
     if (selectedPixels.length > 0) {
         $('#pixelPurchaseLabel').html("Pixel Purchase")
-        count=0;
+        count = 0;
         // $modalPixels.remove();
 
         selectedColors.forEach(c => {
             $modalPixels.append(`<p class='col-5'>Pixel color - ${c}`);
             $modalPixels.append(`<p class='col-2'>x1`);
-            $modalPixels.append(`<p class='col-3'>0.02MATIC`);
-            count+=0.02
+            $modalPixels.append(`<p class='col-3'>0.01 MATIC`);
+            count += 0.01
         });
         $('#metamask-note').html("");
         $('#pixel-success').hide();
         $('#pixel-fail').hide();
         $('#pixel-info').show();
         $('#buy-btn').show();
-        $("#totalBuy").html('Total estimate: '+count+'MATIC')
+        $("#totalBuy").html('Total estimate: ' + count + 'MATIC')
 
-        if(METAMASK_ID !=  '') {
+        if (METAMASK_ID != '') {
             $("#buy-btn").removeClass('disabled');
             $('#metamask-id').html(`${METAMASK_ID}`);
             $("#btn-metamask").addClass('disabled');
-        }else{
+        } else {
             $("#buy-btn").addClass('disabled');
             $('#metamask-id').html(`Connect MetaMask`);
             $("#btn-metamask").removeClass('disabled');
@@ -291,10 +336,12 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
         $("#pixelPurchase").modal('show');
 
         $('#buy-btn').on('click', function (e) {
+            // console.log(selectedColors)
+            // selectedColors = ['#4f54d8', 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4w…wOC43MDE2OTIgMFoiIGZpbGw9IiMyMDBDMDQiIC8+PC9zdmc+']
             buyPixel(selectedPixels, selectedColors);
         })
 
-    }else {
-            alert("Please choose either one or more pixels to purchase.")
+    } else {
+        alert("Please choose either one or more pixels to purchase.")
     }
 });

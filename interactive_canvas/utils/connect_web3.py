@@ -13,7 +13,7 @@ def connect_contract():
         CONTRACT_ABI = json.load(f).get('abi')
         # prev contract: 0x621eB9d5A29306ea50dE3dE7bbbac53F2B4e489a
         # connect to contract
-        contract = w3.eth.contract(address='0x54f2dd7c40c5012163F4423f7A84f13e1a14F30a', abi=CONTRACT_ABI)
+        contract = w3.eth.contract(address='0x53734b36FE7E9f35FD15c7BE1ccA054E9bFaEb3E', abi=CONTRACT_ABI)
         return contract
     else:
         return False
@@ -25,12 +25,13 @@ def get_data(contract, i):
     # try:
     # for i in range(30):
     i=int(i)
-        # token_uri = contract.functions.tokenURI(i).call()
+    token_uri = contract.functions.tokenURI(i).call()
+    token_uri = token_uri.replace('data:application/json;base64,', '')
+    token_uri = token_uri.encode()
+    img_json = json.loads(base64.b64decode(token_uri))
+    img = img_json.get('image')
 
-        #get token color
-    token_color = contract.functions.tokenIdToColor(i).call()
-    # print(token_color)
-    minted_pixels[i] = token_color
+    minted_pixels[i] = img
             # print(minted_pixels)
 
             # converting token_uri
