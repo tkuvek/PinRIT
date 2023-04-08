@@ -1,7 +1,0 @@
-web3==5.31.1
-Flask==2.2.2
-flask-ngrok==0.0.25
-SQLAlchemy==2.0.9
-sqlalchemy-cockroachdb==2.0.0
-psycopg2-binary==2.9.6
-Flask-WTF==1.1.1

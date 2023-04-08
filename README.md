@@ -1,5 +1,5 @@
 # PinRIT PoC
-
+THIS IS A SPECIFIC BRANCH ONLY FOR BLOCKCHAIN CODE
 ## Blockchain testing
 1. Potreban account na <a href="https://www.alchemy.com/">https://www.alchemy.com/</a> (može preko Google Sign In).
 2. Unutar Alchemyja: Apps > Create app > Chain = Polygon > Network = Polygon Mumbai (+dodati nekakvo ime)
@@ -15,7 +15,7 @@
 11. `npx hardhat verify --network mumbai <0x... od prijašnje komande>`
 
 
-## Interactive pixels
+## Interactive pixels on branch main
 Starter app za pinRIT projekt.
 1. Potreban python3.7+
 2. Aktivirati virtualku > `pip install virtualenv` *ako vec nema globalno
