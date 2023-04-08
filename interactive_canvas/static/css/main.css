@@ -128,3 +128,9 @@ body{
     width: 15vw;
     height: 15vh;
 }
+
+#metamask_id{
+    background-color: #0dcaf0;
+    border: none;
+    pointer-events: none;
+}

@@ -32,10 +32,11 @@ def get_user(session, uname):
     return user
 
 
-def create_user(session, uname, pword):
+def create_user(session, uname, pword, metamask):
     user = session.execute(insert(User.__table__).values(
             username=uname,
-            password=pword
+            password=pword,
+            metamask_id=metamask
         ))
     session.commit()
 

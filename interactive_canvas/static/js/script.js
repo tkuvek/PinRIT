@@ -48,7 +48,7 @@ const signIn = async () => {
 
     $("#mm-address").html(accounts[0]);
     METAMASK_ID = accounts[0]
-    $('#metamask-id').html(`${METAMASK_ID}`);
+    $('#metamask_id').html(`${METAMASK_ID}`);
     localStorage.setItem('metamask', `${METAMASK_ID}`);
     $("#buy-btn").removeClass('disabled');
     $("#btn-metamask").addClass('disabled');
@@ -71,24 +71,6 @@ $("#picker").on('change', function (e) {
 // let selectedPixels = ''
 let selectedPixels = [];
 let selectedColors = [];
-
-
-// async function changePixelImage(pixel, svg) {
-//     let tx = await contract.changePixelSvg(
-//         pixel,
-//         svg,
-//         {
-//             value: ethers.utils.parseEther("0"), // price of the transaction
-//             from: accountAddress, // address which will be charged for the transaction
-//             gasPrice: ethers.utils.parseEther("0.000005"), // price of gas fee
-//             gasLimit: hasImage ? 2000000 : 300000// over 9 (hundred) thousand(s)
-//         });
-//     await tx.wait().then((receipt) => {
-//         alert(`Transaction successful: ${receipt.transactionHash}`)
-//     }).catch((error) => {
-//         alert(`Transaction unsuccessful. Error: ${error}`)
-//     })
-// }
 
 
 // BUY PIXEL BUTTON
@@ -130,20 +112,6 @@ async function buyPixel(pixels, colors) {
             $('#pixel-fail').show();
             alert(`Transaction unsuccessful. Error: ${error}`)
         })
-
-        // $.ajax({
-        //     url: '/buy-pixel',
-        //     type: 'POST',
-        //     data: {
-        //         metamask_id: METAMASK_ID,
-        //         pixels: pixels,
-        //         color: color
-        //     },
-        //     success: async function (response) {
-        //     },
-        //     error: function (response) {
-        //     }
-        // });
     }
 }
 
@@ -229,7 +197,6 @@ for (let i = 0; i < numMinted; i++) {
     let res = $.ajax(`/get-mint-data/${i + 1}`).done(function (data) {
         DATA = data;
         $(`#${i} image`).attr("href", DATA[i + 1]).attr("width", 1).attr("height", 1);
-        // d3.select('svg').append("defs").append("pattern").attr("id", `${i}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", DATA[i+1]).attr("width", 1).attr("height", 1);
         $(`#pixel-${i}`).attr("fill", `url(#${i})`);
         PIXEL_COLORS.push(DATA[i + 1]);
         progbarCount += p;
@@ -268,11 +235,6 @@ input.addEventListener('change', function () {
         $imgP.append(`<img class='m-4' src='${dataUrl}' width="50" height="50" />${file.name}</div>`);
     });
 
-    // document.getElementById(`img-${file.name.replace('.svg', '')}`).addEventListener("click", function (e) {
-    //     $("#collection-body").children().removeAttr("style");
-    //     $(this).css('border', "solid 2px red");
-    //     selectedFile = dataUrl;
-    // });
     reader.readAsDataURL(file);
 });
 for (let i = 0; i < localStorage.length; i++) {
@@ -308,7 +270,6 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
     if (selectedPixels.length > 0) {
         $('#pixelPurchaseLabel').html("Pixel Purchase")
         count = 0;
-        // $modalPixels.remove();
 
         selectedColors.forEach(c => {
             $modalPixels.append(`<p class='col-5'>Pixel color - ${c}`);
@@ -325,18 +286,16 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
 
         if (METAMASK_ID != '') {
             $("#buy-btn").removeClass('disabled');
-            $('#metamask-id').html(`${METAMASK_ID}`);
+            $('#metamask_id').html(`${METAMASK_ID}`);
             $("#btn-metamask").addClass('disabled');
         } else {
             $("#buy-btn").addClass('disabled');
-            $('#metamask-id').html(`Connect MetaMask`);
+            $('#metamask_id').html(`Connect MetaMask`);
             $("#btn-metamask").removeClass('disabled');
         }
         $("#pixelPurchase").modal('show');
 
         $('#buy-btn').on('click', function (e) {
-            // console.log(selectedColors)
-            // selectedColors = ['#4f54d8', 'data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4w…wOC43MDE2OTIgMFoiIGZpbGw9IiMyMDBDMDQiIC8+PC9zdmc+']
             buyPixel(selectedPixels, selectedColors);
         })
 

@@ -20,21 +20,28 @@
         <div class="d-flex justify-content-center">
             <h1 class="title">PinRIT Register</h1>
         </div>
+
+        {% if error %}
+        <div class="d-flex justify-content-center">
+            <h5 class="text-light pt-3">Error, please try again!</h1>
+        </div>
+        {% endif %}
+
         <div class="d-flex justify-content-center align-items-center">
-            <form class="login-form" method="POST" action="/register">
+            <form class="login-form text-center" method="POST" action="/register">
                 {{ form.hidden_tag() }}
                 <div class="mb-3 d-flex justify-content-center">
                     <button id="btn-metamask" type="button" class="btn btn-info col-8">
                         <div class="d-flex justify-content-center align-items-center">
                             <img id="metamask-icon" src="../static/img/metamask_icon.png" alt="Metamask icon">
-                            <p id="metamask-id">Connect MetaMask</p>
+                            {{ form.metamask_id }}
                         </div>
                     </button>
                 </div>
-                <div class="mb-3">
+                <div class="mb-3 pt-4 pb-2">
                     {{ form.username.label }} {{ form.username }}
                 </div>
-                <div class="mb-3">
+                <div class="mb-3  pb-4">
                     {{ form.password.label }} {{ form.password }}
                 </div>
                 <div class="mb-3 d-flex justify-content-center">
@@ -52,8 +59,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.ethers.io/lib/ethers-5.0.umd.min.js" type="application/javascript"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://d3js.org/d3.v5.js"></script>
     <script src="{{ url_for('static', filename='js/abi.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/connect_metamask.js') }}"></script>
 </body>
 </html>
