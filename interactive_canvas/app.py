@@ -1,70 +1,82 @@
-from flask import Flask, render_template, make_response, request
-import sys
+from flask import Flask
+from flask import render_template, make_response, request, redirect, url_for
+
+from werkzeug.security import generate_password_hash, check_password_hash
+
 from utils.generate import generate_svg
 from utils.connect_web3 import connect_contract, get_data
 from utils.db_conn import connect_db, Session
 
-from models.user import get_user, create_user
+from utils.forms import LoginForm, RegisterForm
+
+from models.user import get_user, create_user, get, delete_user
+
 
 app = Flask(__name__)
-
-#CONTRACT CONNECTION
+app.config['SECRET_KEY'] = 'Skrtstrng'
+# CONNECT CONTRACT
 contract = connect_contract()
+
 
 # DB CONNECTION
 connect_db()
 session = Session()
-# create_user(session, 'ime', 'pass')
-# get_user(session, 'ime')
-
 
 # main page
 @app.route('/')
-@app.route('/index')
-@app.route('/index/<size>')
+@app.route('/index', methods=["GET"])
 
-def index(size=None):
-    if size != None:
-        svg = generate_svg(int(size))
-    return render_template('index.html')
+def index(auth=False):
+    # auth user check
+    # TODO: auth = User
+    print(auth)
+
+    return render_template('index.html', auth=auth)
 
 
-@app.route('/buy',  methods=["GET", "POST"])
+@app.route('/buy', methods=["GET", "POST"])
 def buy():
     # if request.method == "POST":
         return render_template('buy.html')
 
-#enaaa
+
 @app.route('/info',  methods=["GET", "POST"])
 def info():
     # if request.method == "POST":
         return render_template('info.html')
 
-@app.route('/login',  methods=["GET"])
+
+@app.route('/login',  methods=["GET", "POST"])
 def login():
-    # if request.method == "POST":
-        return render_template('login.html')
+        form = LoginForm()
 
-@app.route('/register',  methods=["GET"])
+        if request.method == "POST":
+            if form.validate_on_submit():
+                user = get_user(session, form.username.data)
+                if user:
+                    if check_password_hash(user.password, form.password.data):
+                        return redirect(url_for('index', auth=True, **request.args))
+
+                # return render_template('invalid_login.html')
+        return render_template('login.html', form=form)
+
+
+@app.route('/register',  methods=["GET", "POST"])
 def register():
-    # if request.method == "POST":
-        return render_template('register.html')
+        form = RegisterForm()
 
+        if request.method == "POST":
+            if form.validate_on_submit():
+                user = get_user(session, form.username.data)
+                if not user:
+                    hash_pass = generate_password_hash(form.password.data, method='sha256')
+                    user = create_user(session, form.username.data, hash_pass)
+                    user = get_user(session, form.username.data)
+                    if user:
+                        return redirect(url_for('index', auth=True, **request.args))
 
-# ORIGINALNI
-# @app.route('/buy-pixel', methods=['GET', 'POST'])
-# def buy_pixel():
-#     m_id = request.form.get('metamask_id')
-#     # todo: metamask id check
+        return render_template('register.html', form=form)
 
-#     p_id = request.form.get('pixel')
-#     p_color = request.form.get('color')
-
-#     #trigger smart contract with id, pixel_id, color
-#     print('METAMASK ID: {}, PIXEL ID: {}, PIXEL COLOR: {}'.format(m_id, p_id, p_color))
-#     #if transaction.ok
-#     #return success
-#     return 'aa'
 
 # TODO: kao dohvaca vise pixela (array) i color-a (array) iako se color uvik salje isti
 @app.route('/buy-pixel', methods=['GET', 'POST'])
