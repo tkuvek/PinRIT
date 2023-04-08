@@ -1,6 +1,6 @@
 # PinRIT PoC
 
-## Blockchain testing
+## Blockchain testing on blockchain branch
 1. Potreban account na <a href="https://www.alchemy.com/">https://www.alchemy.com/</a> (može preko Google Sign In).
 2. Unutar Alchemyja: Apps > Create app > Chain = Polygon > Network = Polygon Mumbai (+dodati nekakvo ime)
 3. Nakon što je app kreiran potrebno ga je otvoriti i kliknuti button "VIEW KEY". Kopirate HTTPS key i zaljepiti ga u .env, u polje TESTNET_RPC.
