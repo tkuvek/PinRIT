@@ -17,10 +17,10 @@ app.config['SECRET_KEY'] = 'Skrtstrng'
 # CONNECT CONTRACT
 contract = connect_contract()
 
-
 # DB CONNECTION
 connect_db()
 db_session = Session()
+# delete_user(db_session, '')
 # get(db_session)
 
 # main page
@@ -56,6 +56,7 @@ def info():
 
 @app.route('/login',  methods=["GET", "POST"])
 def login():
+        error=False
         form = LoginForm()
 
         if request.method == "POST":
@@ -65,9 +66,9 @@ def login():
                     if check_password_hash(user.password, form.password.data):
                         session['user'] = user.username
                         return redirect(url_for('index'))
-
+            error=True
                 # return render_template('invalid_login.html')
-        return render_template('login.html', form=form)
+        return render_template('login.html', form=form, error=error)
 
 
 @app.route('/register',  methods=["GET", "POST"])
@@ -80,7 +81,7 @@ def register():
                 user = get_user(db_session, form.username.data)
                 if not user:
                     hash_pass = generate_password_hash(form.password.data, method='sha256')
-                    user = create_user(db_session, form.username.data, hash_pass, form.metamask_id.data)
+                    create_user(db_session, form.username.data, hash_pass, form.metamask_id.data)
                     user = get_user(db_session, form.username.data)
                     if user:
                         session['user'] = user.username

@@ -133,4 +133,5 @@ body{
     background-color: #0dcaf0;
     border: none;
     pointer-events: none;
+    font-weight: bold;
 }

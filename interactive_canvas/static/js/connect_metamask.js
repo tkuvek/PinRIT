@@ -5,7 +5,8 @@ let signer;
 let accountAddress;
 let numMinted = 152;
 
-$('#metamask_id').html(`CONNECT METAMASK`);
+$('#metamask_id').val(`CONNECT METAMASK`);
+
 
 // CONNECT METAMASK BUTTON
 let METAMASK_ID = localStorage.getItem('metamask') ?? '';

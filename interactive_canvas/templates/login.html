@@ -20,6 +20,13 @@
         <div class="d-flex justify-content-center">
             <h1 class="title">PinRIT Log In</h1>
         </div>
+
+        {% if error %}
+        <div class="d-flex justify-content-center">
+            <h5 class="text-light pt-3">Error, please try again!</h1>
+        </div>
+        {% endif %}
+
         <div class="d-flex justify-content-center align-items-center">
             <form class="login-form text-center" method="POST" action="/login">
                 {{ form.hidden_tag() }}
