@@ -1,9 +1,22 @@
 from flask import Flask, render_template, make_response, request
+import sys
 from utils.generate import generate_svg
 from utils.connect_web3 import connect_contract, get_data
+from utils.db_conn import connect_db, Session
+
+from models.user import get_user, create_user
+
 app = Flask(__name__)
 
+#CONTRACT CONNECTION
 contract = connect_contract()
+
+# DB CONNECTION
+connect_db()
+session = Session()
+# create_user(session, 'ime', 'pass')
+# get_user(session, 'ime')
+
 
 # main page
 @app.route('/')
