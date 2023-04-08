@@ -29,7 +29,11 @@
                 {% if not user %}
                 <div class="spacer"></div>
                 <a class="btn btn-info" href="{{ url_for('login')}}">Log in</a>
+                {% else  %}
+                <div class="spacer"></div>
+                <a class="btn btn-info" href="{{ url_for('logout')}}">Log out</a>
                 {% endif %}
+
             </div>
         </div>
     </nav>

@@ -29,7 +29,13 @@
 
       <form class="d-flex flex-row-reverse align-items-center">
         <!-- purchase btn -->
-        <button id="logout" class="btn btn-info ms-2">Log out</button>
+        {% if not user %}
+        <div class="spacer"></div>
+        <a class="btn btn-info ms-2" href="{{ url_for('login')}}">Log in</a>
+        {% else  %}
+        <div class="spacer"></div>
+        <a class="btn btn-info ms-2" href="{{ url_for('logout')}}">Log out</a>
+        {% endif %}
         <button id="buyPixels" class="btn btn-info ms-2">Buy pixels</button>
         <button id="myCollection" class="btn btn-info ms-2">My collection</button>
         <img id="image" width="50" height="50" class="ms-2" style="display: none;"/>

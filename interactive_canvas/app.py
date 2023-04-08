@@ -40,7 +40,12 @@ def index():
 @app.route('/buy', methods=["GET", "POST"])
 def buy():
     # if request.method == "POST":
-        return render_template('buy.html')
+        username=None
+        if 'user' in session:
+            username = session.get('user')
+        print(username)
+
+        return render_template('buy.html', user=username)
 
 
 @app.route('/info',  methods=["GET", "POST"])
@@ -81,6 +86,12 @@ def register():
                         return redirect(url_for('index'))
 
         return render_template('register.html', form=form)
+
+
+@app.route('/logout',  methods=["GET"])
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('index'))
 
 
 # TODO: kao dohvaca vise pixela (array) i color-a (array) iako se color uvik salje isti
