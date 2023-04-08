@@ -72,7 +72,7 @@ async function buyPixel(pixels, colors) {
                 value: ethers.utils.parseEther("0"), // price of the transaction
                 from: accountAddress, // address which will be charged for the transaction
                 gasPrice: ethers.utils.parseEther("0.000000001000000016"), // price of gas fee
-                gasLimit: 10947513 // over 9 (hundred) thousand(s)
+                gasLimit: 10947513 * selectedPixels.length // over 9 (hundred) thousand(s)
             });
         await tx.wait().then((receipt) => {
             if (receipt.status === 1) {
