@@ -112,3 +112,19 @@ body{
     width: 2vw;
     height: 2vh;
 }
+
+.login-form{
+    width: 25%;
+    height: 25%;
+    color: whitesmoke;
+    margin-top: 2%;
+}
+
+.login-page{
+    margin-top: 8%;
+}
+
+.login-logo{
+    width: 15vw;
+    height: 15vh;
+}

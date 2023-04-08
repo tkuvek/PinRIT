@@ -20,22 +20,23 @@
         <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logoOOO"></a>
       </div>
 
-      <div class="progbar col-md-7">
-        <div id="myProgress">
-          <div id="myBar"></div>
-        </div>
-      </div>
-      <div class="col-md-3">
-
-        <form class="d-flex flex-row-reverse align-items-center">
-          <!-- purchase btn -->
-          <button id="buyPixels" class="btn btn-info ms-4">Buy pixels</button>
-          <button id="myCollection" class="btn btn-info ms-4">My collection</button>
-          <img id="image" width="50" height="50" class="ms-4" style="display: none;"/>
-          <input type="color" value="#4f54d8" id="picker" class="">
-        </form>
+    <div class="progbar col-md-6">
+      <div id="myProgress">
+        <div id="myBar"></div>
       </div>
     </div>
+    <div class="col-md-4">
+
+      <form class="d-flex flex-row-reverse align-items-center">
+        <!-- purchase btn -->
+        <button id="logout" class="btn btn-info ms-2">Log out</button>
+        <button id="buyPixels" class="btn btn-info ms-2">Buy pixels</button>
+        <button id="myCollection" class="btn btn-info ms-2">My collection</button>
+        <img id="image" width="50" height="50" class="ms-2" style="display: none;"/>
+        <input type="color" value="#4f54d8" id="picker" class="">
+      </form>
+    </div>
+  </div>
 
     </div>
   </nav>

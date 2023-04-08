@@ -40,6 +40,16 @@ def info():
     # if request.method == "POST":
         return render_template('info.html')
 
+@app.route('/login',  methods=["GET"])
+def login():
+    # if request.method == "POST":
+        return render_template('login.html')
+
+@app.route('/register',  methods=["GET"])
+def register():
+    # if request.method == "POST":
+        return render_template('register.html')
+
 
 # ORIGINALNI
 # @app.route('/buy-pixel', methods=['GET', 'POST'])
