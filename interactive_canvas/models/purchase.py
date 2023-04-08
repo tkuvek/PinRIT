@@ -1,28 +1,47 @@
-from sqlalchemy import Column, Integer, ForeignKey, Date
+from datetime import datetime
+from sqlalchemy import Column, Integer, ForeignKey, Date, insert, update, String, cast
 from sqlalchemy.orm import relationship, backref
 
-from ..utils.db_conn import Base, Session
-from user import User
+from utils.db_conn import Base
+from .user import User
 
 
 class Purchase(Base):
-    __tablename__ = "purchase"
+    __schema__ = 'pinRIT'
+    __tablename__ = 'purchase'
+
     id = Column(Integer, primary_key=True)
-    user_id = Column(ForeignKey(User.id), Integer)
+    uname = Column(String, ForeignKey(User.username))
     pixel_id = Column(Integer)
     pdate = Column(Date)
 
     owner = relationship(User, backref=backref('pixels', lazy='dynamic'))
 
     def __repr__(self):
-        return "<Purchase(id='{}', user_id='{}', pixel_id='{}')>".format(
+        return "<Purchase(id='{}', uname='{}', pixel_id='{}', pdate='{}')>".format(
             self.id,
-            self.user_id,
+            self.uname,
             self.pixel_id,
+            self.pdate
         )
 
-def get_all(user):
-    session = Session()
-    p = session.query(Purchase).filter_by(user_id=user.id).all()
+
+def get_pixels(session, user):
+    p = session.query(Purchase).filter_by(uname=user).all()
     print(p)
     return p
+
+
+def create_pixel(session, user, pid):
+    exists = session.query(Purchase).filter_by(pixel_id=int(pid)).first()
+
+    if exists:
+        session.execute(update(Purchase.__table__).values(
+            uname=user,
+            pdate=datetime.now()
+        ))
+    else:
+        session.execute(insert(Purchase.__table__).values(
+                uname=user,
+                pixel_id=int(pid)
+        ))

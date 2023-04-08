@@ -3,13 +3,13 @@ from flask import render_template, make_response, request, redirect, url_for
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from utils.generate import generate_svg
 from utils.connect_web3 import connect_contract, get_data
 from utils.db_conn import connect_db, Session
 
 from utils.forms import LoginForm, RegisterForm
 
-from models.user import get_user, create_user, get, delete_user
+from models.user import get_user, create_user, get, delete_user, get_mid
+from models.purchase import get_pixels, create_pixel
 
 
 app = Flask(__name__)
@@ -21,7 +21,7 @@ contract = connect_contract()
 connect_db()
 db_session = Session()
 # delete_user(db_session, '')
-# get(db_session)
+get(db_session)
 
 # main page
 @app.route('/')
@@ -29,7 +29,7 @@ db_session = Session()
 
 def index():
 
-    username=None
+    username = None
     if 'user' in session:
         username = session.get('user')
     print(username)
@@ -39,19 +39,19 @@ def index():
 
 @app.route('/buy', methods=["GET", "POST"])
 def buy():
-    # if request.method == "POST":
-        username=None
-        if 'user' in session:
-            username = session.get('user')
-        print(username)
+    username = None
+    mid = None
+    if 'user' in session:
+        username = session.get('user')
+        mid = get_mid(db_session, username)
+    print(username)
 
-        return render_template('buy.html', user=username)
+    return render_template('buy.html', user=username, metamask_id=mid)
 
 
 @app.route('/info',  methods=["GET", "POST"])
 def info():
-    # if request.method == "POST":
-        return render_template('info.html')
+    return render_template('info.html')
 
 
 @app.route('/login',  methods=["GET", "POST"])
@@ -73,22 +73,22 @@ def login():
 
 @app.route('/register',  methods=["GET", "POST"])
 def register():
-        form = RegisterForm()
-        error=False
+    form = RegisterForm()
+    error=False
 
-        if request.method == "POST":
-            if form.validate_on_submit():
+    if request.method == "POST":
+        if form.validate_on_submit():
+            user = get_user(db_session, form.username.data)
+            if not user:
+                hash_pass = generate_password_hash(form.password.data, method='sha256')
+                create_user(db_session, form.username.data, hash_pass, form.metamask_id.data)
                 user = get_user(db_session, form.username.data)
-                if not user:
-                    hash_pass = generate_password_hash(form.password.data, method='sha256')
-                    create_user(db_session, form.username.data, hash_pass, form.metamask_id.data)
-                    user = get_user(db_session, form.username.data)
-                    if user:
-                        session['user'] = user.username
-                        return redirect(url_for('index'))
-            error=True
+                if user:
+                    session['user'] = user.username
+                    return redirect(url_for('index'))
+        error=True
 
-        return render_template('register.html', form=form, error=error)
+    return render_template('register.html', form=form, error=error)
 
 
 @app.route('/logout',  methods=["GET"])
@@ -100,21 +100,20 @@ def logout():
 # TODO: kao dohvaca vise pixela (array) i color-a (array) iako se color uvik salje isti
 @app.route('/buy-pixel', methods=['GET', 'POST'])
 def buy_pixel():
-    m_id = request.form.get('metamask_id')
-    # todo: metamask id check
+    if request.method == "POST":
+        # d = request.json
+        pixels = request.form.getlist('pixels[]')
+        user = session['user']
 
-    pixels = request.form.getlist('pixels')
-    color = request.form.getlist('color')
+        #add user and pixel_id to db, calculate purchased date
+        for i in range(len(pixels)):
+            p_id = pixels[i]
+            create_pixel(db_session, user, p_id)
+        db_session.commit()
 
-    #trigger smart contract with id, pixels, colors
-    for i in range(len(pixels)):
-        p_id = pixels[i]
-        p_color = color[i]
-        print('METAMASK ID: {}, PIXEL ID: {}, PIXEL COLOR: {}'.format(m_id, p_id, p_color))
-        #if transaction.ok
-        #return success
+        get_pixels(db_session, user)
 
-    return 'aa'
+    return 'purchase success: {}'.format(user)
 
 
 # pixel svg for js

@@ -6,10 +6,11 @@ from utils.db_conn import Base
 class User(Base):
     __schema__ = 'pinRIT'
     __tablename__ = 'user'
+
     id = Column(Integer, primary_key=True)
-    username = Column(String)
-    password = Column(String)
-    metamask_id = Column(String)
+    username = Column(String, unique=True, nullable=False)
+    password = Column(String, nullable=False)
+    metamask_id = Column(String, nullable=False)
 
     def __repr__(self):
         return "<User(id='{}', username='{}', password='{}', metamask_id='{}')>".format(
@@ -40,8 +41,14 @@ def create_user(session, uname, pword, metamask):
         ))
     session.commit()
 
+
 def delete_user(session, uname):
     user = session.execute(delete(User.__table__).where(
             User.username==uname
         ))
     session.commit()
+
+
+def get_mid(session, uname):
+    user = session.query(User).filter_by(username=uname).first()
+    return user.metamask_id

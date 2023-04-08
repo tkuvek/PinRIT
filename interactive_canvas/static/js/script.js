@@ -3,10 +3,12 @@ let provider;
 let contract;
 let signer;
 let accountAddress;
-let numMinted = 152;
+let numMinted = 40;
 
 // CONNECT METAMASK BUTTON
-let METAMASK_ID = localStorage.getItem('metamask') ?? '';
+let METAMASK_ID = $("#metamask_id").text();
+$("#btn-metamask").removeClass('disabled');
+$("#btn-metamask").addClass('disabled');
 
 //CONNECT CONTRACT
 if (window.ethereum && METAMASK_ID.length > 0) {
@@ -32,26 +34,9 @@ function connectContract() {
     contract.connect(signer)
 }
 
-
-$('#btn-metamask').on('click', function (e) {
-    if (window.ethereum) {
-        signIn();
-    } else {
-        $("#btn-metamask").removeClass('disabled');
-        $('#metamask-note').html("Install MetaMask browser extension!");
-    }
-});
-
 const signIn = async () => {
     let accounts = await window.ethereum.request({ method: "eth_requestAccounts" }).catch(error => alert(JSON.stringify(error.message)));
     connectContract()
-
-    $("#mm-address").html(accounts[0]);
-    METAMASK_ID = accounts[0]
-    $('#metamask_id').html(`${METAMASK_ID}`);
-    localStorage.setItem('metamask', `${METAMASK_ID}`);
-    $("#buy-btn").removeClass('disabled');
-    $("#btn-metamask").addClass('disabled');
 }
 
 
@@ -91,6 +76,14 @@ async function buyPixel(pixels, colors) {
             });
         await tx.wait().then((receipt) => {
             if (receipt.status === 1) {
+                $.ajax({
+                    url: '/buy-pixel',
+                    type: 'POST',
+                    // contentType: 'application/json;charset=UTF-8',
+                    data: {
+                        pixels: selectedPixels
+                    }
+                });
                 $('#pixelPurchaseLabel').html("Success");
                 $('#pixel-info').hide();
                 $('#buy-btn').hide();
