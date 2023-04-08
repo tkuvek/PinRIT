@@ -26,10 +26,10 @@
                     
                 <div class="spacer"></div>
                 <a class="btn btn-info" href="{{ url_for('buy')}}">Get your own</a>
-
+                {% if not user %}
                 <div class="spacer"></div>
                 <a class="btn btn-info" href="{{ url_for('login')}}">Log in</a>
-                    
+                {% endif %}
             </div>
         </div>
     </nav>

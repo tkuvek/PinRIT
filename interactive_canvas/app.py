@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 from flask import render_template, make_response, request, redirect, url_for
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -18,20 +18,23 @@ app.config['SECRET_KEY'] = 'Skrtstrng'
 contract = connect_contract()
 
 
+
 # DB CONNECTION
 connect_db()
-session = Session()
+db_session = Session()
 
 # main page
 @app.route('/')
 @app.route('/index', methods=["GET"])
 
-def index(auth=False):
-    # auth user check
-    # TODO: auth = User
-    print(auth)
+def index():
 
-    return render_template('index.html', auth=auth)
+    username=None
+    if 'user' in session:
+        username = session.get('user')
+    print(username)
+
+    return render_template('index.html', user=username)
 
 
 @app.route('/buy', methods=["GET", "POST"])
@@ -52,10 +55,11 @@ def login():
 
         if request.method == "POST":
             if form.validate_on_submit():
-                user = get_user(session, form.username.data)
+                user = get_user(db_session, form.username.data)
                 if user:
                     if check_password_hash(user.password, form.password.data):
-                        return redirect(url_for('index', auth=True, **request.args))
+                        session['user'] = user.username
+                        return redirect(url_for('index'))
 
                 # return render_template('invalid_login.html')
         return render_template('login.html', form=form)
@@ -67,13 +71,14 @@ def register():
 
         if request.method == "POST":
             if form.validate_on_submit():
-                user = get_user(session, form.username.data)
+                user = get_user(db_session, form.username.data)
                 if not user:
                     hash_pass = generate_password_hash(form.password.data, method='sha256')
-                    user = create_user(session, form.username.data, hash_pass)
-                    user = get_user(session, form.username.data)
+                    user = create_user(db_session, form.username.data, hash_pass)
+                    user = get_user(db_session, form.username.data)
                     if user:
-                        return redirect(url_for('index', auth=True, **request.args))
+                        session['user'] = user.username
+                        return redirect(url_for('index'))
 
         return render_template('register.html', form=form)
 
