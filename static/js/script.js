@@ -72,7 +72,7 @@ async function buyPixel(pixels, colors) {
                 value: ethers.utils.parseEther("0"), // price of the transaction
                 from: accountAddress, // address which will be charged for the transaction
                 gasPrice: ethers.utils.parseEther("0.000000001000000016"), // price of gas fee
-                gasLimit: 10947513 * selectedPixels.length // over 9 (hundred) thousand(s)
+                gasLimit: 18408638 // over 9 (hundred) thousand(s)
             });
         await tx.wait().then((receipt) => {
             if (receipt.status === 1) {
@@ -157,6 +157,9 @@ for (let i = 0; i < size * size; i++) {
                     hasImage = false
             } else {
                 if (selectedFile !== "") {
+                    if (selectedPixels.map((pixel) => pixel.length > 10).length >= 2) {
+                        alert("Can't place more uploaded images");
+                    } else {
                     $(`#${pId} image`).attr("href", selectedFile).attr("width", 1).attr("height", 1)
                     // d3.select('svg').append("defs").append("pattern").attr("id", `${pId}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", selectedFile).attr("width", 1).attr("height", 1);
                     d3.select(this).attr("fill", `url(#${pId})`);
@@ -164,6 +167,7 @@ for (let i = 0; i < size * size; i++) {
                     selectedPixels.push(pId+1);
                     selectedColors.push(selectedFile);
                     hasImage = true
+                    }
                 }
                 else {
                     d3.select(this).attr('fill', color);
@@ -254,7 +258,11 @@ document.getElementById("btn-use").addEventListener("click", function (e) {
 
 document.getElementById("myCollection").addEventListener("click", function (e) {
     e.preventDefault();
+    if (selectedPixels.map((pixel) => pixel.length > 10).length >= 2) {
+        alert("Can't place more uploaded images");
+    } else {
     $("#myCollectionModal").modal('show');
+    }
 });
 
 document.getElementById("buyPixels").addEventListener("click", function (e) {
