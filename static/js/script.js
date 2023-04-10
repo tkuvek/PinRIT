@@ -241,7 +241,8 @@ for (let i = 0; i < localStorage.length; i++) {
         $collectionDiv.append(`<div id="img-${key}" class="d-flex my-3 justify-content-start align-items-center"><img class='m-4' src='${value}' width="50" height="50" />${key}</div>`);
         document.getElementById(`img-${key}`).addEventListener("click", function (e) {
             $("#collection-body").children().removeAttr("style");
-            $(this).css('border', "solid 2px red");
+            $(this).css('border', "solid 2px darkblue");
+            $(this).css('border-radius', "500px");
             selectedFile = value;
         });
     }
@@ -273,7 +274,8 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
         count = 0;
 
         selectedColors.forEach(c => {
-            $modalPixels.append(`<p class='col-5'>Pixel color - ${c}`);
+            $modalPixels.append(`<p class='col-5'>Pixel -`);
+            $modalPixels.append(c.length > 10 ? `<img class='col-2' style="width: 50px; height: 25px; margin-right: 10px;" src=${c} />` : `<span class='col-2' style="width: 25px; height: 25px; background-color: ${c};" />`)
             $modalPixels.append(`<p class='col-2'>x1`);
             $modalPixels.append(`<p class='col-3'>0.01 MATIC`);
             count += 0.01
