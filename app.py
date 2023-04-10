@@ -90,7 +90,6 @@ def logout():
     return redirect(url_for('index'))
 
 
-# TODO: kao dohvaca vise pixela (array) i color-a (array) iako se color uvik salje isti
 @app.route('/buy-pixel', methods=['GET', 'POST'])
 def buy_pixel():
     if request.method == "POST":
