@@ -28,7 +28,6 @@ get(db_session)
 @app.route('/index', methods=["GET"])
 
 def index():
-
     username = None
     if 'user' in session:
         username = session.get('user')
@@ -49,11 +48,6 @@ def buy():
     return render_template('buy.html', user=username, metamask_id=mid)
 
 
-@app.route('/info',  methods=["GET", "POST"])
-def info():
-    return render_template('info.html')
-
-
 @app.route('/login',  methods=["GET", "POST"])
 def login():
         error=False
@@ -67,14 +61,13 @@ def login():
                         session['user'] = user.username
                         return redirect(url_for('index'))
             error=True
-                # return render_template('invalid_login.html')
         return render_template('login.html', form=form, error=error)
 
 
 @app.route('/register',  methods=["GET", "POST"])
 def register():
-    form = RegisterForm()
     error=False
+    form = RegisterForm()
 
     if request.method == "POST":
         if form.validate_on_submit():
