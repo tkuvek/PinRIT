@@ -36,11 +36,12 @@ def create_pixel(session, user, pid):
     exists = session.query(Purchase).filter_by(pixel_id=int(pid)).first()
 
     if exists:
-        session.execute(update(Purchase.__table__).values(
+        session.execute(update(Purchase.__table__)
+        .where(
+            Purchase.pixel_id==int(pid)
+        ).values(
             uname=user,
             pdate=datetime.now()
-        ).where(
-            pixel_id=pid
         ))
     else:
         session.execute(insert(Purchase.__table__).values(
