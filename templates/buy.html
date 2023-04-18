@@ -34,7 +34,7 @@
           <a class="btn btn-info ms-2" href="{{ url_for('login')}}">Log in</a>
           {% else %}
           <div class="spacer"></div>
-          <a class="btn btn-info ms-2" href="{{ url_for('logout')}}">Log out</a>
+          <a class="btn btn-info ms-2" href="{{ url_for('logout')}}"><i class="fas fa-sign-out-alt"></i></a>
           {% endif %}
           <button id="buyPixels" class="btn btn-info ms-2">Buy pixels</button>
           <button id="myCollection" class="btn btn-info ms-2">Upload image</button>
@@ -131,6 +131,11 @@
 
 
         <div id="collection-body" class="modal-body">
+
+          <div id="img-heart" class="d-flex my-3 justify-content-between align-items-center"><img id="heart-svg" class='m-4' src='{{ url_for('static', filename='img/heart.svg') }}' width="50" height="50" /><p class="m-4">heart</p><p class="hidden m-5"></p></div>
+          <div id="img-smile" class="d-flex my-3 justify-content-between align-items-center"><img id="smile-svg" class='m-4' src='{{ url_for('static', filename='img/smile.svg') }}' width="50" height="50" /><p class="m-4">smile</p><p class="hidden m-5"></p></div>
+          <div id="img-sun" class="d-flex my-3 justify-content-between align-items-center"><img id="sun-svg" class='m-4' src='{{ url_for('static', filename='img/sun.svg') }}' width="50" height="50" /><p class="m-4">sun</p><p class="hidden m-5"></p></div>
+
         </div>
         <div class="modal-footer">
           <div class="row justify-content-between mb-3 align-items-center">
@@ -153,6 +158,7 @@
   <script src="https://d3js.org/d3.v5.js"></script>
   <script src="{{ url_for('static', filename='js/abi.js') }}"></script>
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.js" integrity="sha512-6V5JccoHkiddv+vVubCp2TFQsx9UC/VIa5+l+zSObWn1Ns5nYQOkdCgRah1Fb0NOeYPAD6b+d7Ui9ImHTIwsJw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </body>
 
 </html>

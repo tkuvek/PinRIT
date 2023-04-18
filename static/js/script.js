@@ -234,14 +234,19 @@ input.addEventListener('change', function () {
         let dataUrl = reader.result;
         let fName = file.name.replace('.svg', '');
         localStorage.setItem(fName, dataUrl);
-        let $imgP=$(`<div id="img-${fName}" class="d-flex my-3 justify-content-start align-items-center">`)
+        let $imgP=$(`<div id="img-${fName}" class="d-flex my-3 justify-content-between align-items-center">`)
         $collectionDiv.append($imgP);
         $imgP.on('click', function(){
             $("#collection-body").children().removeAttr("style");
-            $(this).css('border', "solid 2px red");
+             $(this).css('border', "solid 2px darkblue");
+            $(this).css('border-radius', "500px");
             selectedFile = dataUrl;
         })
-        $imgP.append(`<img class='m-4' src='${dataUrl}' width="50" height="50" />${file.name}</div>`);
+        $imgP.append(`<img class='m-4' src='${dataUrl}' width="50" height="50" /><p class="m-4">${fName}</p><a id="remove-${fName}" class="m-5"><i class="fa-solid fa-x"></i></a></div>`);
+        document.getElementById(`remove-${fName}`).addEventListener("click", function (e) {
+            localStorage.removeItem(fName);
+           $(`#img-${fName}`).remove();
+        });
     });
 
     reader.readAsDataURL(file);
@@ -250,7 +255,11 @@ for (let i = 0; i < localStorage.length; i++) {
     let key = localStorage.key(i);
     let value = localStorage.getItem(key);
     if (key !== 'metamask') {
-        $collectionDiv.append(`<div id="img-${key}" class="d-flex my-3 justify-content-start align-items-center"><img class='m-4' src='${value}' width="50" height="50" />${key}</div>`);
+       $collectionDiv.append(`<div id="img-${key}" class="d-flex my-3 justify-content-between align-items-center"><img class='m-4' src='${value}' width="50" height="50" /><p class="m-4">${key}</p><a id="remove-${key}" class="m-5"><i class="fa-solid fa-x"></i></a></div>`);
+       document.getElementById(`remove-${key}`).addEventListener("click", function (e) {
+            localStorage.removeItem(key);
+           $(`#img-${key}`).remove();
+        });
         document.getElementById(`img-${key}`).addEventListener("click", function (e) {
             $("#collection-body").children().removeAttr("style");
             $(this).css('border', "solid 2px darkblue");
@@ -258,6 +267,29 @@ for (let i = 0; i < localStorage.length; i++) {
             selectedFile = value;
         });
     }
+}
+
+const gallery = ["heart", "smile", "sun"];
+for (let i = 0; i < gallery.length; i++) {
+    let key = gallery[i];
+    
+    document.getElementById(`img-${key}`).addEventListener("click", function (e) {
+        $("#collection-body").children().removeAttr("style");
+        $(this).css('border', "solid 2px darkblue");
+        $(this).css('border-radius', "500px");
+
+       const image = document.getElementById(`${key}-svg`);
+
+       fetch(image.src)
+           .then((res) => res.blob())
+           .then((blob) => {
+               const reader = new FileReader();
+               reader.onloadend = () => {
+                selectedFile = reader.result;
+               };
+               reader.readAsDataURL(blob);
+           });
+    });
 }
 
 document.getElementById("btn-use").addEventListener("click", function (e) {
