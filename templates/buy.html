@@ -70,11 +70,11 @@
             aria-label="Close"></button>
         </div>
         {% if metamask_id %}
-        <div id="metamask-div" class="row justify-content-center mt-2">
-          <button id="btn-metamask" type="button" class="btn btn-info col-8">
+        <div id="metamask-div" class="row justify-content-center mt-2 align-items-center">
+          <button id="btn-metamask" type="button" class="btn btn-info col-8 align-items-center">
             <div class="d-flex justify-content-center align-items-center">
-              <img id="metamask-icon" src="../static/img/metamask_icon.png" alt="Metamask icon">
-              <p id="metamask_id">{{ metamask_id }}</p>
+              <img class="me-2" id="metamask-icon" src="../static/img/metamask_icon.png" alt="Metamask icon">
+              <p id="metamask_id" class="text-center align-items-center mt-2">{{ metamask_id }}</p>
             </div>
           </button>
           <div class="row justify-content-center">

@@ -1,4 +1,4 @@
-let numMinted = 152;
+let numMinted = 900;
 
 //COLOR PICKER
 let color = $("#picker")[0].value;
@@ -53,6 +53,8 @@ async function buyPixel(pixels, colors) {
                 }
                 selectedPixels = [];
                 selectedColors = [];
+
+                $("#pixelCount").html(`${selectedPixels.length}`);
             }
         }).catch((error) => {
 
@@ -145,8 +147,7 @@ for (let i = 0; i < size * size; i++) {
                     selectedColors.push(color);
                 }
             }
-            var pixelCount = selectedPixels.length;
-            $("#pixelCount").html(`${pixelCount}`);
+            $("#pixelCount").html(`${selectedPixels.length}`);
         });
     svg.append("defs").append("pattern").attr("id", `${i}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image")
 
