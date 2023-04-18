@@ -13,7 +13,6 @@ $("#picker").on('change', function (e) {
 
 
 // SELECTED PIXEL
-// let selectedPixels = ''
 let selectedPixels = [];
 let selectedColors = [];
 
@@ -39,7 +38,6 @@ async function buyPixel(pixels, colors) {
                 $.ajax({
                     url: '/buy-pixel',
                     type: 'POST',
-                    // contentType: 'application/json;charset=UTF-8',
                     data: {
                         pixels: selectedPixels
                     }
@@ -55,7 +53,6 @@ async function buyPixel(pixels, colors) {
                 }
                 selectedPixels = [];
                 selectedColors = [];
-                //alert(`Transaction successful: ${receipt.transactionHash}`)
             }
         }).catch((error) => {
 
@@ -132,7 +129,6 @@ for (let i = 0; i < size * size; i++) {
                 if (selectedFile !== "") {
                     if (selectedPixels.map((pixel) => pixel.length > 10).length >= 2) {
                         $("#uploadImage").modal('show');
-                        //alert("Can't place more uploaded images");
                     } else {
                         $(`#${pId} image`).attr("href", selectedFile).attr("width", 1).attr("height", 1)
                         d3.select(this).attr("fill", `url(#${pId})`);
@@ -175,8 +171,8 @@ for (let i = 0; i < numMinted; i++) {
 
   let res = $.ajax(`/get-mint-data/${fetchIndex+1}`).done(function (data) {
     DATA[fetchIndex+1] = data[fetchIndex+1];
-    $(`#${fetchIndex+1} image`).attr("href", DATA[fetchIndex+1]).attr("width", 1).attr("height", 1);
-    $(`#pixel-${fetchIndex}`).attr("fill", `url(#${fetchIndex+1})`);
+    $(`#${fetchIndex} image`).attr("href", DATA[fetchIndex+1]).attr("width", 1).attr("height", 1);
+    $(`#pixel-${fetchIndex}`).attr("fill", `url(#${fetchIndex})`);
     PIXEL_COLORS.push(DATA[fetchIndex+1]);
     progbarCount += p;
     $progBar.css('width', `${progbarCount}%`);
@@ -203,7 +199,7 @@ input.addEventListener('change', function () {
     reader.addEventListener('load', function () {
         let dataUrl = reader.result;
         let fName = file.name.replace('.svg', '');
-        localStorage.setItem(fName, dataUrl);
+        localStorage.setItem(fName.replace(' ','-'), dataUrl);
         let $imgP=$(`<div id="img-${fName}" class="d-flex my-3 justify-content-between align-items-center">`)
         $collectionDiv.append($imgP);
         $imgP.on('click', function(){
@@ -221,7 +217,7 @@ input.addEventListener('change', function () {
 
     reader.readAsDataURL(file);
 });
-for (let i = 1; i < localStorage.length; i++) {
+for (let i = 0; i < localStorage.length; i++) {
     let key = localStorage.key(i);
     let value = localStorage.getItem(key);
     if (key !== 'metamask') {
