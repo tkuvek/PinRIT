@@ -148,6 +148,8 @@ for (let i = 0; i < size * size; i++) {
                     selectedColors.push(color);
                 }
             }
+            var pixelCount = selectedPixels.length;
+            $("#pixelCount").html(`${pixelCount}`);
         });
     svg.append("defs").append("pattern").attr("id", `${i}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image")
 

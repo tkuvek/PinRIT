@@ -33,14 +33,20 @@
           <div class="spacer"></div>
           <a class="btn btn-info ms-2" href="{{ url_for('login')}}">Log in</a>
           {% else %}
-          
-          <div class="spacer"></div>
           <a class="btn btn-info ms-2" href="{{ url_for('logout')}}"><i class="fas fa-sign-out-alt"></i></a>
-          <div class="spacer"></div>
           <a class="btn btn-info ms-2" href="{{ url_for('userProfile')}}"><i class="fa-solid fa-user"></i></a>
           {% endif %}
-          <button id="buyPixels" class="btn btn-info ms-2">Buy pixels</button>
-          <button id="myCollection" class="btn btn-info ms-2">Upload image</button>
+          <div class="ms-2"></div>
+          <button id="buyPixels" class="btn btn-info ms-2">
+            <div class="cart-div">
+              <i class="fa-solid fa-cart-shopping"></i>
+              <span id="pixelCount" class='badge badge-light'>0</span>
+            </div>
+          </button>
+
+          <button id="myCollection" class="btn btn-info ms-2">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+          </button>
           <img id="image" width="50" height="50" class="ms-2" style="display: none;" />
           <input type="color" value="#4f54d8" id="picker" class="">
         </form>

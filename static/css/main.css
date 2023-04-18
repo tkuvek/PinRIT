@@ -142,3 +142,14 @@ body{
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.badge.badge-light{
+    color: black;
+    background-color: white;
+    position: absolute;
+    top: -8px;
+}
+
+#buyPixels{
+    position: relative;
+}
