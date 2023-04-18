@@ -16,11 +16,10 @@
 
     <nav class="navbar bg-body-tertiary navbar-dark bg-dark">
         <div class="container-fluid">
-            <a href="{{ url_for('index')}}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logoOOO"></a>
-            <h1 id="pinrittext" class="title">PinRIT</h1>
+            <a href="{{ url_for('index')}}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="Logo"></a>
+            <h1 id="pinrittext" class="title">{{user}}</h1>
             <div class="d-flex">
               
-                <!-- <button class="btn btn-outline-info" type="submit">How it works</button> -->
                 <div class="spacer"></div>
                 <a class="btn btn-info" href="{{ url_for('buy')}}">Get your own</a>
                 {% if not user %}
@@ -28,18 +27,19 @@
                 <a class="btn btn-info" href="{{ url_for('login')}}">Log in</a>
                 {% else  %}
                 <div class="spacer"></div>
-                <a class="btn btn-info" href="{{ url_for('userProfile')}}"><i class="fa-solid fa-user"></i></a>
-                <div class="spacer"></div>
                 <a class="btn btn-info" href="{{ url_for('logout')}}"><i class="fas fa-sign-out-alt"></i></a>
                 {% endif %}
-
             </div>
         </div>
     </nav>
 
-    <div class="w-100 d-flex justify-content-center">
-        <img class="w-75 mt-5" src="{{ url_for('static', filename='img/hero.svg') }}" alt="slika">
+    <div id="profile" class="m-5">
+        {% for i in values %}
+            <img height="30" width="30" src="{{i}}" alt="SVG image"/>
+        {% endfor %}
     </div>
+
+
     <!-- </div> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"

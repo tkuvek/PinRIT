@@ -39,6 +39,8 @@ def create_pixel(session, user, pid):
         session.execute(update(Purchase.__table__).values(
             uname=user,
             pdate=datetime.now()
+        ).where(
+            pixel_id=pid
         ))
     else:
         session.execute(insert(Purchase.__table__).values(

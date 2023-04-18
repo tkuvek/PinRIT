@@ -125,5 +125,28 @@ def get_mint_data(id):
         return data
 
 
+@app.route('/user_profile',  methods=["GET", "POST"])
+def userProfile():
+    username = None
+    if 'user' in session:
+        username = session.get('user')
+        user = session['user']
+        userPixels = get_pixels(db_session, user)
+    
+        data = []
+        values = []
+        if contract:
+            for i in userPixels:
+                pixelId = i.pixel_id
+                dataForPixel = get_data(contract, pixelId)
+                data.append(dataForPixel)
+            
+            for j in data:
+                for key, value in j.items():
+                    values.append(value)
+
+    return render_template('user_profile.html', user=username, pixels=userPixels, data=data, values=values)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
