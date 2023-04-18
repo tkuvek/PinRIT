@@ -23,7 +23,6 @@ function connectContract() {
     provider.getNetwork().then(function (result) {
         if (result['chainId'] === 80001) {
             provider.listAccounts().then(function (result) {
-                console.log(result);
                 accountAddress = result[0]; // figure out the user's Eth address
             })
         }
