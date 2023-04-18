@@ -1,3 +1,4 @@
+let numMinted = 152;
 
 //COLOR PICKER
 let color = $("#picker")[0].value;
@@ -70,7 +71,7 @@ async function buyPixel(pixels, colors) {
 
 // CREATE D3 SVG
 let map = document.getElementById('#map');
-let size = 100;
+let size = 30;
 let start_zoom = 15;
 let zoom = d3.zoom().scaleExtent([start_zoom, 100]).translateExtent([[0, 0], [size, size]]);
 
@@ -163,21 +164,28 @@ let hasImage = false
 let DATA = {};
 let PIXEL_COLORS = [];
 let p = 100 / numMinted
-for (let i = 0; i < numMinted; i++) {
 
-    let res = $.ajax(`/get-mint-data/${i + 1}`).done(function (data) {
-        DATA[i+1] = data[i+1];
-        $(`#${i} image`).attr("href", DATA[i + 1]).attr("width", 1).attr("height", 1);
-        $(`#pixel-${i}`).attr("fill", `url(#${i})`);
-        PIXEL_COLORS.push(DATA[i + 1]);
-        progbarCount += p;
-        $progBar.css('width', `${progbarCount}%`);
-        if ($progBar.prop('style')['width'] === '100%') {
-            console.log(`success: ${i + 1} pixels loaded`);
-            $progBar.css('display', 'none');
-            $('#myProgress').css('display', 'none');
-        }
-    });
+// Generate a sequence of random integers within the range of [1, numMinted]
+let fetchOrder = Array.from({length: numMinted}, (_, i) => i);
+fetchOrder = fetchOrder.sort(() => Math.random() - 0.5);
+
+// Fetch mint data for each integer in the shuffled sequence
+for (let i = 0; i < numMinted; i++) {
+  let fetchIndex = fetchOrder[i];
+
+  let res = $.ajax(`/get-mint-data/${fetchIndex+1}`).done(function (data) {
+    DATA[fetchIndex+1] = data[fetchIndex+1];
+    $(`#${fetchIndex+1} image`).attr("href", DATA[fetchIndex+1]).attr("width", 1).attr("height", 1);
+    $(`#pixel-${fetchIndex}`).attr("fill", `url(#${fetchIndex+1})`);
+    PIXEL_COLORS.push(DATA[fetchIndex+1]);
+    progbarCount += p;
+    $progBar.css('width', `${progbarCount}%`);
+    if ($progBar.prop('style')['width'] === '100%') {
+      console.log(`success: ${i+1} pixels loaded`);
+      $progBar.css('display', 'none');
+      $('#myProgress').css('display', 'none');
+    }
+  });
 }
 
 $modalPixels = $("#modalPixels");

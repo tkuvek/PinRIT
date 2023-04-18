@@ -15,8 +15,8 @@
 
 
   <nav class="nv bg-body-tertiary navbar-dark bg-dark">
-    <div class="row">
-      <div class="col-md-2">
+    <div class="row d-flex justify-content-between">
+      <div class="col-md-3">
         <a href="{{ url_for('index') }}"><img src="{{ url_for('static', filename='img/logo.svg') }}" alt="logoOOO"></a>
       </div>
 
@@ -25,43 +25,38 @@
           <div id="myBar"></div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-md-3">
 
         <form class="d-flex flex-row-reverse align-items-center">
           <!-- purchase btn -->
           {% if not user %}
           <div class="spacer"></div>
-          <a class="btn btn-info ms-2" href="{{ url_for('login')}}">Log in</a>
+          <a class="btn btn-info" href="{{ url_for('login')}}">Log in</a>
           {% else %}
-          <a class="btn btn-info ms-2" href="{{ url_for('logout')}}"><i class="fas fa-sign-out-alt"></i></a>
-          <a class="btn btn-info ms-2" href="{{ url_for('userProfile')}}"><i class="fa-solid fa-user"></i></a>
+          <a class="btn btn-info mx-2" href="{{ url_for('logout')}}"><i class="fas fa-sign-out-alt"></i></a>
+          <a class="btn btn-info mx-2" href="{{ url_for('userProfile')}}"><i class="fa-solid fa-user"></i></a>
           {% endif %}
-          <div class="ms-2"></div>
-          <button id="buyPixels" class="btn btn-info ms-2">
+          <button id="buyPixels" class="btn btn-info mx-2">
             <div class="cart-div">
               <i class="fa-solid fa-cart-shopping"></i>
               <span id="pixelCount" class='badge badge-light'>0</span>
             </div>
           </button>
 
-          <button id="myCollection" class="btn btn-info ms-2">
+          <button id="myCollection" class="btn btn-info mx-2">
             <i class="fa-solid fa-cloud-arrow-up"></i>
           </button>
-          <img id="image" width="50" height="50" class="ms-2" style="display: none;" />
-          <input type="color" value="#4f54d8" id="picker" class="">
+          <img id="image" width="50" height="50" class="mx-2" style="display: none;" />
+          <input type="color" value="#4f54d8" id="picker" class="mx-2">
         </form>
       </div>
     </div>
 
     </div>
   </nav>
-  <div class="container">
-    <div class="row width">
-      <div class="col-md-12">
-        <svg id="map"></svg>
-      </div>
+    <div class="container">
+      <svg id="map"></svg>
     </div>
-  </div>
 
   <!-- Modal -->
   <div class="modal fade" id="pixelPurchase" tabindex="-1" aria-labelledby="pixelPurchaseLabel" aria-hidden="true"

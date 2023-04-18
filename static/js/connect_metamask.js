@@ -3,7 +3,6 @@ let provider;
 let contract;
 let signer;
 let accountAddress;
-let numMinted = 70;
 
 $('#metamask_id').val(`CONNECT METAMASK`);
 
