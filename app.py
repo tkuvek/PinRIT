@@ -21,7 +21,7 @@ contract = connect_contract()
 connect_db()
 db_session = Session()
 # delete_user(db_session, '')
-get(db_session)
+# get(db_session)
 
 # main page
 @app.route('/')
@@ -43,9 +43,19 @@ def buy():
     if 'user' in session:
         username = session.get('user')
         mid = get_mid(db_session, username)
-    print(username)
 
     return render_template('buy.html', user=username, metamask_id=mid)
+
+
+@app.route('/buy/get-mid', methods=["GET", "POST"])
+def get_metamask():
+    username = None
+    mid = ''
+    if 'user' in session:
+        username = session.get('user')
+        mid = get_mid(db_session, username)
+
+    return mid
 
 
 @app.route('/login',  methods=["GET", "POST"])

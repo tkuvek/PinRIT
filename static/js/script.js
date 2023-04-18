@@ -211,7 +211,7 @@ input.addEventListener('change', function () {
 
     reader.readAsDataURL(file);
 });
-for (let i = 0; i < localStorage.length; i++) {
+for (let i = 1; i < localStorage.length; i++) {
     let key = localStorage.key(i);
     let value = localStorage.getItem(key);
     if (key !== 'metamask') {

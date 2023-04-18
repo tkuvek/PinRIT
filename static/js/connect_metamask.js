@@ -3,13 +3,23 @@ let provider;
 let contract;
 let signer;
 let accountAddress;
-let numMinted = 152;
+let numMinted = 70;
 
 $('#metamask_id').val(`CONNECT METAMASK`);
 
 
 // CONNECT METAMASK BUTTON
-let METAMASK_ID = localStorage.getItem('metamask') ?? '';
+let METAMASK_ID = '';
+$.ajax({
+    url:'buy/get-mid',
+    type: 'GET',
+    async: false
+}).done(function(d) { 
+    METAMASK_ID=d;
+}).catch(function (e){
+    METAMASK_ID = '';
+})
+localStorage.setItem('metamask', `${METAMASK_ID}`);
 
 //CONNECT CONTRACT
 if (window.ethereum && METAMASK_ID.length > 0) {
@@ -53,7 +63,6 @@ const signIn = async () => {
     $('#metamask_id').html(`${METAMASK_ID}`);
     $('#metamask_id').val(`${METAMASK_ID}`);
 
-    localStorage.setItem('metamask', `${METAMASK_ID}`);
     $("#buy-btn").removeClass('disabled');
     $("#btn-metamask").addClass('disabled');
 }
