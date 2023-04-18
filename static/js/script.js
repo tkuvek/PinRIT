@@ -3,7 +3,7 @@ let provider;
 let contract;
 let signer;
 let accountAddress;
-let numMinted = 40;
+let numMinted = 60;
 
 // CONNECT METAMASK BUTTON
 let METAMASK_ID = $("#metamask_id").text();
@@ -146,12 +146,25 @@ for (let i = 0; i < size * size; i++) {
             let pColor = d3.select(this).attr('fill');
 
             if (selectedPixels.some((pixelId) => pixelId === pId+1)) {
-                d3.select(this).attr("fill", `url(#${pId})`);
+                let c=''
+                let imgHref=''
+                let index = selectedPixels.indexOf(pId+1)
+
+                if (DATA[pId + 1] != undefined){
+                    c =`url(#${pId})`
+                    imgHref = DATA[pId + 1]
+                } else {
+                    c='#120F0F'
+                    imgHref = ''
+                }
+                d3.select(this).attr("fill", c);
                 d3.select(this).style('stroke', null);
-                // document.getElementById(""+pId).parentNode.remove();
-                $(`#${i} image`).attr("href", DATA[pId + 1])
-                selectedPixels = selectedPixels.filter((pixel) => pixel !== pId);
-                selectedColors = selectedColors.filter((color) => color !== pColor);
+                d3.select(this).style('stroke-width', null);
+                $(`#${i} image`).attr("href", imgHref)
+
+                selectedPixels.splice(index, 1);
+                selectedColors.splice(index, 1);
+
                 selectedFile = "";
                 if (selectedColors.every((color) => !color.startsWith('d')))
                     hasImage = false
@@ -160,13 +173,12 @@ for (let i = 0; i < size * size; i++) {
                     if (selectedPixels.map((pixel) => pixel.length > 10).length >= 2) {
                         alert("Can't place more uploaded images");
                     } else {
-                    $(`#${pId} image`).attr("href", selectedFile).attr("width", 1).attr("height", 1)
-                    // d3.select('svg').append("defs").append("pattern").attr("id", `${pId}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", selectedFile).attr("width", 1).attr("height", 1);
-                    d3.select(this).attr("fill", `url(#${pId})`);
-                    d3.select(this).style('stroke', 'white').style('stroke-width', '0.1px');
-                    selectedPixels.push(pId+1);
-                    selectedColors.push(selectedFile);
-                    hasImage = true
+                        $(`#${pId} image`).attr("href", selectedFile).attr("width", 1).attr("height", 1)
+                        d3.select(this).attr("fill", `url(#${pId})`);
+                        d3.select(this).style('stroke', 'white').style('stroke-width', '0.1px');
+                        selectedPixels.push(pId+1);
+                        selectedColors.push(selectedFile);
+                        hasImage = true
                     }
                 }
                 else {
@@ -192,7 +204,7 @@ let p = 100 / numMinted
 for (let i = 0; i < numMinted; i++) {
 
     let res = $.ajax(`/get-mint-data/${i + 1}`).done(function (data) {
-        DATA = data;
+        DATA[i+1] = data[i+1];
         $(`#${i} image`).attr("href", DATA[i + 1]).attr("width", 1).attr("height", 1);
         $(`#pixel-${i}`).attr("fill", `url(#${i})`);
         PIXEL_COLORS.push(DATA[i + 1]);
