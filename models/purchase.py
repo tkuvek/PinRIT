@@ -28,9 +28,11 @@ class Purchase(Base):
 
 def get_pixels(session, user):
     p = session.query(Purchase).filter_by(uname=user).all()
-    print(p)
     return p
 
+def get_owner(session, pid):
+    p = session.query(Purchase.uname).filter_by(pixel_id=pid).all()
+    return p
 
 def create_pixel(session, user, pid):
     exists = session.query(Purchase).filter_by(pixel_id=int(pid)).first()

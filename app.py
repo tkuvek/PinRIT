@@ -42,6 +42,8 @@ def buy():
     mid = None
     if 'user' in session:
         username = session.get('user')
+        connect_db()
+        db_session = Session()
         mid = get_mid(db_session, username)
 
     return render_template('buy.html', user=username, metamask_id=mid)
