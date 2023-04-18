@@ -65,6 +65,8 @@ def login():
 
         if request.method == "POST":
             if form.validate_on_submit():
+                connect_db()
+                db_session = Session()
                 user = get_user(db_session, form.username.data)
                 if user:
                     if check_password_hash(user.password, form.password.data):
@@ -81,6 +83,8 @@ def register():
 
     if request.method == "POST":
         if form.validate_on_submit():
+            connect_db()
+            db_session = Session()
             user = get_user(db_session, form.username.data)
             if not user:
                 hash_pass = generate_password_hash(form.password.data, method='sha256')
@@ -108,6 +112,8 @@ def buy_pixel():
         user = session['user']
 
         #add user and pixel_id to db, calculate purchased date
+        connect_db()
+        db_session = Session()
         for i in range(len(pixels)):
             p_id = pixels[i]
             create_pixel(db_session, user, p_id)
@@ -141,6 +147,8 @@ def userProfile():
     if 'user' in session:
         username = session.get('user')
         user = session['user']
+        connect_db()
+        db_session = Session()
         userPixels = get_pixels(db_session, user)
     
         data = []
