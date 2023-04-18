@@ -103,7 +103,7 @@ async function buyPixel(pixels, colors) {
             $('#pixel-info').hide();
             $('#buy-btn').hide();
             $('#pixel-fail').show();
-            alert(`Transaction unsuccessful. Error: ${error}`)
+            //alert(`Transaction unsuccessful. Error: ${error}`)
         })
     }
 }
@@ -158,7 +158,8 @@ for (let i = 0; i < size * size; i++) {
             } else {
                 if (selectedFile !== "") {
                     if (selectedPixels.map((pixel) => pixel.length > 10).length >= 2) {
-                        alert("Can't place more uploaded images");
+                        $("#uploadImage").modal('show');
+                        //alert("Can't place more uploaded images");
                     } else {
                     $(`#${pId} image`).attr("href", selectedFile).attr("width", 1).attr("height", 1)
                     // d3.select('svg').append("defs").append("pattern").attr("id", `${pId}`).attr("patternUnits", "userSpaceOnUse").attr("width", 1).attr("height", 1).append("image").attr("href", selectedFile).attr("width", 1).attr("height", 1);
@@ -260,7 +261,8 @@ document.getElementById("btn-use").addEventListener("click", function (e) {
 document.getElementById("myCollection").addEventListener("click", function (e) {
     e.preventDefault();
     if (selectedPixels.map((pixel) => pixel.length > 10).length >= 2) {
-        alert("Can't place more uploaded images");
+        $("#uploadImage").modal('show');
+        //alert("Can't place more uploaded images");
     } else {
     $("#myCollectionModal").modal('show');
     }
@@ -303,6 +305,7 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
         })
 
     } else {
-        alert("Please choose either one or more pixels to purchase.")
+        $("#buyPixel").modal('show');
+        //alert("Please choose either one or more pixels to purchase.")
     }
 });
