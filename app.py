@@ -52,6 +52,8 @@ def get_metamask():
     username = None
     mid = ''
     if 'user' in session:
+        connect_db()
+        db_session = Session()
         username = session.get('user')
         mid = get_mid(db_session, username)
 
