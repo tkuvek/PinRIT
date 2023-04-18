@@ -33,8 +33,11 @@
           <div class="spacer"></div>
           <a class="btn btn-info ms-2" href="{{ url_for('login')}}">Log in</a>
           {% else %}
+          
           <div class="spacer"></div>
           <a class="btn btn-info ms-2" href="{{ url_for('logout')}}"><i class="fas fa-sign-out-alt"></i></a>
+          <div class="spacer"></div>
+          <a class="btn btn-info ms-2" href="{{ url_for('userProfile')}}"><i class="fa-solid fa-user"></i></a>
           {% endif %}
           <button id="buyPixels" class="btn btn-info ms-2">Buy pixels</button>
           <button id="myCollection" class="btn btn-info ms-2">Upload image</button>
