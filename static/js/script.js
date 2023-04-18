@@ -271,7 +271,6 @@ document.getElementById("myCollection").addEventListener("click", function (e) {
     e.preventDefault();
     if (selectedPixels.map((pixel) => pixel.length > 10).length >= 2) {
         $("#uploadImage").modal('show');
-        //alert("Can't place more uploaded images");
     } else {
     $("#myCollectionModal").modal('show');
     }
@@ -284,8 +283,10 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
         $('#pixelPurchaseLabel').html("Pixel Purchase")
         count = 0;
 
-        selectedColors.forEach(c => {
-            $modalPixels.append(`<p class='col-5'>Pixel -`);
+        selectedPixels.forEach(p => {
+            let index = selectedPixels.indexOf(p)
+            let c =selectedColors[index]
+            $modalPixels.append(`<p class='col-5'>Pixel - ${p}`);
             $modalPixels.append(c.length > 10 ? `<img class='col-2' style="width: 50px; height: 25px; margin-right: 10px;" src=${c} />` : `<span class='col-2' style="width: 25px; height: 25px; background-color: ${c};" />`)
             $modalPixels.append(`<p class='col-2'>x1`);
             $modalPixels.append(`<p class='col-3'>0.01 MATIC`);
@@ -315,6 +316,5 @@ document.getElementById("buyPixels").addEventListener("click", function (e) {
 
     } else {
         $("#buyPixel").modal('show');
-        //alert("Please choose either one or more pixels to purchase.")
     }
 });
