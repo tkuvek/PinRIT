@@ -1,4 +1,4 @@
-let numMinted = 900;
+let numMinted = 450;
 
 //COLOR PICKER
 let color = $("#picker")[0].value;
